@@ -10,26 +10,24 @@ struct Noh {
 typedef struct Noh Noh;
 
 struct Lista {
-    Noh* cabeca; // noh inicial (primeiro) da lista encadeada
+    Noh* cauda; // noh terminal (ultimo) da lista encadeada
 };
 
 Lista* cria(void) {
     Lista* l = malloc(sizeof(Lista));
-    l->cabeca = NULL; // indicacao de primeiro noh inexistente (lista vazia)
+    l->cauda = NULL;
 }
 
 bool underflow(const Lista* l) {
-    return l->cabeca == NULL;
+    return l->cauda == NULL;
 }
 
 bool overflow(const Lista* l) {
-    // Faz uma alocacao "fake" de um noh para verificar
-    // condicao da memoria
     Noh* f = malloc(sizeof(Noh));
     if (f == NULL) {
-        return true; // "lista" (memoria) estah cheia!
+        return true;
     }
-    free(f); // nao deixa lixo para tras
+    free(f);
     return false;
 }
 
@@ -116,11 +114,16 @@ TipoReg remover(Lista* l, TipoChave x, Posicao p) {
 }
 
 void destroi(Lista* l) {
-    while (!underflow(l)) {
-        Noh* n = l->cabeca;
-        l->cabeca = n->proximo; 
-        free(n);
+    if (underflow(l)) {
+        return;
     }
+    Noh* n = l->cauda->proximo;
+    while (n->proximo != n) { // enquanto nao for o noh remanescente
+        Noh* x = n;
+        n = n->proximo;
+        free(x);
+    }
+    free(n);
 }
 
 

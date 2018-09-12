@@ -27,6 +27,15 @@ int main(void) {
     printf("Removido '%s'\n", r.dado);
     imprime(teste);
 
+    printf("Digite uma chave para buscar: ");
+    scanf("%d", &chave);
+    TipoReg* preg = busca(teste, chave);
+    if (preg != NULL) {
+        printf("Encontrei o registro '%s'\n", preg->dado);
+    } else {
+        puts("Chave nao existe na lista");
+    }
+
     destroi(teste);
 
     return EXIT_SUCCESS;

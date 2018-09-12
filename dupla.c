@@ -5,17 +5,18 @@
 struct Noh {
     TipoChave chave;
     TipoReg registro;
+    struct Noh* anterior; // novo campo da estrutura do noh
     struct Noh* proximo;
 };
 typedef struct Noh Noh;
 
 struct Lista {
-    Noh* cabeca; // noh inicial (primeiro) da lista encadeada
+    Noh* cabeca;
 };
 
 Lista* cria(void) {
     Lista* l = malloc(sizeof(Lista));
-    l->cabeca = NULL; // indicacao de primeiro noh inexistente (lista vazia)
+    l->cabeca = NULL;
 }
 
 bool underflow(const Lista* l) {
@@ -23,13 +24,11 @@ bool underflow(const Lista* l) {
 }
 
 bool overflow(const Lista* l) {
-    // Faz uma alocacao "fake" de um noh para verificar
-    // condicao da memoria
     Noh* f = malloc(sizeof(Noh));
     if (f == NULL) {
-        return true; // "lista" (memoria) estah cheia!
+        return true;
     }
-    free(f); // nao deixa lixo para tras
+    free(f);
     return false;
 }
 
@@ -42,11 +41,12 @@ void inserir(Lista* l, TipoChave x, const TipoReg* r, Posicao p) {
             n->proximo = NULL;
             if (!underflow(l)) {
                 Noh* u = l->cabeca;
-                while (u->proximo != NULL) { // enquanto NAO for o ultimo
+                while (u->proximo != NULL) {
                     u = u->proximo;
                 }
                 // Na saida do laco, 'u' estah apontando para a cauda (ultimo)
                 u->proximo = n;
+                n->anterior = u;
                 break; // o 'break' do 'case FIM' soh existe se !underflow
             }
             // ATENCAO: a falta de 'break' aqui eh INTENCIONAL, pois no caso
@@ -54,10 +54,7 @@ void inserir(Lista* l, TipoChave x, const TipoReg* r, Posicao p) {
             // sem o 'break', a execucao continua pelo 'case INICIO' abaixo...
 
         case INICIO:
-            // Eh NECESSARIO obedecer a ordem do proximo par de comandos,
-            // do contrario - se elas forem invertidas - a referencia anterior
-            // ao inicio da lista (e a tudo mais dela) serah perdida (substi-
-            // tuida pelo endereco do novo noh)
+            n->anterior = NULL;
             n->proximo = l->cabeca;
             l->cabeca = n;
             break;
@@ -78,19 +75,17 @@ TipoReg remover(Lista* l, TipoChave x, Posicao p) {
     // Presume-se que houve uma chamada anterior a underflow() para
     // verificar se a lista estava vazia ANTES da chamada a remover()
 
-    TipoReg r = {}; // registro vazio
-    Noh* n = l->cabeca; // faz acesso ao primeiro noh da lista
+    TipoReg r = {};
+    Noh* n = l->cabeca;
     switch (p) {
         case FIM:
             if (n->proximo != NULL) { // cabeca da lista NAO estah sozinha
-                Noh* anterior = NULL; // memoria do endereco do noh anterior a 'n'
                 while (n->proximo != NULL) {
-                    anterior = n; // lembra quem era o anterior de 'n'
                     n = n->proximo;
                 }
                 r = n->registro;
-                anterior->proximo = NULL; // atualiza o anterior como nova cauda
-                                          // (ultimo noh) da lista
+                n->anterior->proximo = NULL; // atualiza o anterior como nova cauda
+                                             // (ultimo noh) da lista
                 free(n);
                 break; // break do 'case FIM' se noh nao era UNICO
             }
@@ -99,8 +94,10 @@ TipoReg remover(Lista* l, TipoChave x, Posicao p) {
             // sem o 'break', a execucao continua pelo 'case INICIO' abaixo...
 
         case INICIO:
-            l->cabeca = n->proximo; // indica como nova cabeca aquele que
-                                    // era ateh agora o segundo noh da lista
+            l->cabeca = n->proximo;
+            if (n->proximo != NULL) { // existia um segundo que agora eh primeiro?
+                n->proximo->anterior = NULL; // ele (n->proximo) deve anular o
+            }                                // ponteiro anterior
             r = n->registro;
             free(n);
             break;
@@ -129,11 +126,14 @@ void imprime(const Lista* l) {
         printf("(VAZIA)");
         return;
     }
-    printf("(CABECA) ");
+    printf("(CABECA) NULL<-");
     Noh* n = l->cabeca;
     while (n != NULL) {
         imprime_tipo(n->chave, &n->registro);
-        printf("-->");
+        if (n->proximo != NULL) { // existe o proximo?
+            putchar('<'); // alguem aponta para este noh (n)
+        }
+        printf("->");
         n = n->proximo;
     }
     printf("NULL (CAUDA)\n");
@@ -141,12 +141,12 @@ void imprime(const Lista* l) {
 
 TipoReg* busca(const Lista* l, TipoChave x) {
     Noh* n = l->cabeca;
-    while (n != NULL) { // serve tambem para verificar lista nula
+    while (n != NULL) {
         if (n->chave == x) {
             return &n->registro;
         }
-        n = n->proximo; // continua busca pelo proximo noh
+        n = n->proximo;
     }
-    return NULL; // chegou ao fim sem encontrar a chave
+    return NULL;
 }
 
