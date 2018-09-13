@@ -118,6 +118,7 @@ void destroi(Lista* l) {
     while (!underflow(l)) {
         remover(l, 0, INICIO);
     }
+    free(l);
 }
 
 

@@ -119,6 +119,7 @@ void destroi(Lista* l) {
         l->cabeca = n->proximo; 
         free(n);
     }
+    free(l);
 }
 
 
