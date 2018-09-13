@@ -48,7 +48,7 @@ void inserir(Lista* l, TipoChave x, const TipoReg* r, Posicao p) {
                 n->proximo = u->proximo;
                 u->proximo = n;
             }
-            if (p == FIM) {
+            if (underflow(l) || p == FIM) {
                 l->cauda = n; // referencia (ponteiro) externa(o) soh eh
                               // atualizada(o) se insercao eh no FIM da lista
             }
