@@ -17,6 +17,7 @@ struct Lista {
 Lista* cria(void) {
     Lista* l = malloc(sizeof(Lista));
     l->cabeca = NULL;
+    return l;
 }
 
 bool underflow(const Lista* l) {

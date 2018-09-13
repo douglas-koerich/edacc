@@ -16,6 +16,7 @@ struct Lista {
 Lista* cria(void) {
     Lista* l = malloc(sizeof(Lista));
     l->cabeca = NULL; // indicacao de primeiro noh inexistente (lista vazia)
+    return l;
 }
 
 bool underflow(const Lista* l) {

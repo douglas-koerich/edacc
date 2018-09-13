@@ -16,6 +16,7 @@ struct Lista {
 Lista* cria(void) {
     Lista* l = malloc(sizeof(Lista));
     l->cauda = NULL;
+    return l;
 }
 
 bool underflow(const Lista* l) {
@@ -36,28 +37,21 @@ void inserir(Lista* l, TipoChave x, const TipoReg* r, Posicao p) {
     n->chave = x;
     n->registro = *r; // memcpy(&n->registro, r, sizeof(TipoReg));
     switch (p) {
-        case FIM:
-            n->proximo = NULL;
-            if (!underflow(l)) {
-                Noh* u = l->cabeca;
-                while (u->proximo != NULL) { // enquanto NAO for o ultimo
-                    u = u->proximo;
-                }
-                // Na saida do laco, 'u' estah apontando para a cauda (ultimo)
-                u->proximo = n;
-                break; // o 'break' do 'case FIM' soh existe se !underflow
-            }
-            // ATENCAO: a falta de 'break' aqui eh INTENCIONAL, pois no caso
-            // de lista vazia, a insercao no FIM eh igual a insercao no INICIO;
-            // sem o 'break', a execucao continua pelo 'case INICIO' abaixo...
-
+        // Na lista circular, a insercao no fim e no inicio poem o novo noh
+        // na MESMA posicao (depois do ultimo/antes do primeiro)
         case INICIO:
-            // Eh NECESSARIO obedecer a ordem do proximo par de comandos,
-            // do contrario - se elas forem invertidas - a referencia anterior
-            // ao inicio da lista (e a tudo mais dela) serah perdida (substi-
-            // tuida pelo endereco do novo noh)
-            n->proximo = l->cabeca;
-            l->cabeca = n;
+        case FIM:
+            if (underflow(l)) {
+                n->proximo = n;
+            } else {
+                Noh* u = l->cauda; // ponteiro para o ultimo noh atualmente
+                n->proximo = u->proximo;
+                u->proximo = n;
+            }
+            if (p == FIM) {
+                l->cauda = n; // referencia (ponteiro) externa(o) soh eh
+                              // atualizada(o) se insercao eh no FIM da lista
+            }
             break;
 
         case ORDEM: // caso especial onde a posicao tem a ver com o valor
@@ -77,28 +71,35 @@ TipoReg remover(Lista* l, TipoChave x, Posicao p) {
     // verificar se a lista estava vazia ANTES da chamada a remover()
 
     TipoReg r = {}; // registro vazio
-    Noh* n = l->cabeca; // faz acesso ao primeiro noh da lista
+    Noh* n = l->cauda; // faz acesso ao ultimo noh da lista
     switch (p) {
-        case FIM:
-            if (n->proximo != NULL) { // cabeca da lista NAO estah sozinha
-                Noh* anterior = NULL; // memoria do endereco do noh anterior a 'n'
-                while (n->proximo != NULL) {
-                    anterior = n; // lembra quem era o anterior de 'n'
-                    n = n->proximo;
-                }
-                r = n->registro;
-                anterior->proximo = NULL; // atualiza o anterior como nova cauda
-                                          // (ultimo noh) da lista
-                free(n);
-                break; // break do 'case FIM' se noh nao era UNICO
+        case INICIO:
+            if (n->proximo != n) { // cauda da lista NAO estah sozinha
+                Noh* c = n->proximo; // ponteiro para a cabeca da lista
+                n->proximo = c->proximo; // ultimo agora aponta para o segundo
+                r = c->registro;
+                free(c);
+                break; // break do 'case INICIO' se noh nao era UNICO
             }
             // ATENCAO: a falta de 'break' aqui eh INTENCIONAL, pois no caso
-            // de lista com um UNICO noh, a remocao do FIM eh igual a do INICIO;
-            // sem o 'break', a execucao continua pelo 'case INICIO' abaixo...
+            // de lista com um UNICO noh, a remocao do INICIO eh igual a do FIM;
+            // sem o 'break', a execucao continua pelo 'case FIM' abaixo...
 
-        case INICIO:
-            l->cabeca = n->proximo; // indica como nova cabeca aquele que
-                                    // era ateh agora o segundo noh da lista
+        case FIM:
+            if (n->proximo == n) { // somente este noh na lista
+                l->cauda = NULL;
+            } else {
+                // Eh necessario encontrar o penultimo elemento para marca-lo
+                // como o novo fim da lista
+                Noh* c = n->proximo; // comeca pela cabeca da lista
+                while (c->proximo != n) {
+                    c = c->proximo;
+                }
+                // O ponteiro 'c' termina o laco acima apontando para o
+                // penultimo noh; ele deve ser o ultimo agora
+                c->proximo = n->proximo; // ele passa a apontar para o inicio
+                l->cauda = c;
+            }    
             r = n->registro;
             free(n);
             break;
@@ -114,16 +115,9 @@ TipoReg remover(Lista* l, TipoChave x, Posicao p) {
 }
 
 void destroi(Lista* l) {
-    if (underflow(l)) {
-        return;
+    while (!underflow(l)) {
+        remover(l, 0, INICIO);
     }
-    Noh* n = l->cauda->proximo;
-    while (n->proximo != n) { // enquanto nao for o noh remanescente
-        Noh* x = n;
-        n = n->proximo;
-        free(x);
-    }
-    free(n);
 }
 
 
@@ -132,24 +126,29 @@ void imprime(const Lista* l) {
         printf("(VAZIA)");
         return;
     }
+    // Inicia impressao pela cabeca
     printf("(CABECA) ");
-    Noh* n = l->cabeca;
-    while (n != NULL) {
+    Noh* n = l->cauda->proximo;
+    do {
         imprime_tipo(n->chave, &n->registro);
         printf("-->");
         n = n->proximo;
-    }
-    printf("NULL (CAUDA)\n");
+    } while (n != l->cauda->proximo);
+    printf(" (CAUDA)--->(CABECA)\n");
 }
 
 TipoReg* busca(const Lista* l, TipoChave x) {
-    Noh* n = l->cabeca;
-    while (n != NULL) { // serve tambem para verificar lista nula
+    if (underflow(l)) {
+        return NULL;
+    }
+    // Inicia a busca pela cabeca
+    Noh* n = l->cauda;
+    do {
         if (n->chave == x) {
             return &n->registro;
         }
-        n = n->proximo; // continua busca pelo proximo noh
-    }
+        n = n->proximo;
+    } while (n != l->cauda);
     return NULL; // chegou ao fim sem encontrar a chave
 }
 
