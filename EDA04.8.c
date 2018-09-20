@@ -21,19 +21,26 @@ int main(int argc, char* argv[]) {
     }
     putchar('\n');
 
-    int maior = busca_maior(vetor, 0, tamanho-1);
+    int maior = busca_maior(vetor, 0, tamanho-1); // indices que cobrem toda a
+                                                  // extensao do vetor
     printf("O maior valor no conjunto eh %d\n", maior);
 
     return EXIT_SUCCESS;
 }
 
 int busca_maior(int* vetor, int indice_inferior, int indice_superior) {
+    // Se nao ha como dividir mais o segmento onde estamos,
+    // caimos na condicao terminal ("comparacao trivial")
     if (indice_inferior == indice_superior) {
         return vetor[indice_inferior]; // O maior eh o unico! :-)
     }
     int indice_meio = (indice_inferior + indice_superior) / 2;
+
+    // Busca recursiva em cada metade (inferior e superior)
     int maior_metade_inferior = busca_maior(vetor, indice_inferior, indice_meio);
     int maior_metade_superior = busca_maior(vetor, indice_meio+1, indice_superior);
+
+    // Compara agora os valores "campeoes" (maiores) de suas respectivas metades
     if (maior_metade_inferior > maior_metade_superior) {
         return maior_metade_inferior;
     } else {

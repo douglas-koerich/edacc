@@ -131,7 +131,7 @@ TipoReg* busca(const Lista* l, TipoChave x) {
 
 static size_t tamanho_r(const Noh* n) {
     if (n == NULL) { // condicao terminal da recursividade
-        return 0;
+        return 0;    // operacao trivial como eh toda condicao terminal
     } else {
         return 1 + tamanho_r(n->proximo); // conta este noh MAIS
                                           // o total retornado pela sequencia
