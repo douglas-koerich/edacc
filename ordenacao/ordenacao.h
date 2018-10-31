@@ -8,4 +8,6 @@ void bolha(Registro [*], size_t);
 void selecao(Registro [*], size_t);
 void insercao(Registro [*], size_t);
 
+void radixsort(Registro [*], size_t);
+
 #endif // ORDENACAO_H
