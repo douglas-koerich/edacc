@@ -9,5 +9,7 @@ void selecao(Registro [*], size_t);
 void insercao(Registro [*], size_t);
 
 void radixsort(Registro [*], size_t);
+void mergesort(Registro [*], int, int);
+void quicksort(Registro [*], int, int);
 
 #endif // ORDENACAO_H

@@ -1,3 +1,5 @@
+#include <stdlib.h> // para uso de malloc/free
+#include <string.h> // para uso de memcpy
 #include <limits.h> // para saber a definicao de UINT_MAX (maior unsigned)
 #include <math.h> // para uso do log10()
 #include "ordenacao.h"
@@ -106,4 +108,56 @@ void radixsort(Registro vetor[], size_t tamanho) {
         destroi(cjto_filas[simb]);
     }
 }
+
+static void intercala(Registro vetor[], int inicio, int meio, int fim) {
+    // Faz uma copia do segmento para permitir a intercalacao in loco no vetor
+    size_t tamanho_segmento = fim - inicio + 1;
+    Registro* copia = malloc(sizeof(Registro) * tamanho_segmento);
+    memcpy(copia, &vetor[inicio], tamanho_segmento * sizeof(Registro));
+
+    // Define dois indices que percorrerao as respectivas metades da esquerda
+    // para a direita
+    int ind_metade_esq = inicio, ind_metade_dir = meio+1;
+
+    // Enquanto houver elementos a comparar nas DUAS metades...
+    int i = inicio;
+    while (ind_metade_esq <= meio && ind_metade_dir <= fim) {
+        if (copia[ind_metade_esq].chave < copia[ind_metade_dir].chave) {
+            memcpy(&vetor[i], &copia[ind_metade_esq], sizeof(Registro));
+            ++ind_metade_esq; // ind_metade_dir fica onde estah
+        } else {
+            memcpy(&vetor[i], &copia[ind_metade_dir], sizeof(Registro));
+            ++ind_metade_dir; // ind_metade_esq fica onde estah
+        }
+        ++i;
+    }
+    // O laco acima termina quando uma (mas nao sei qual) das metades termina
+    while (ind_metade_esq <= meio) { // copia o restante (se houver) da esquerda
+        memcpy(&vetor[i++], &copia[ind_metade_esq++], sizeof(Registro));
+    }
+    while (ind_metade_dir <= fim) { // copia o restante (se houver) da direita
+        memcpy(&vetor[i++], &copia[ind_metade_dir++], sizeof(Registro));
+    }
+    // Libera a copia local do segmento
+    free(copia);
+}
+
+void mergesort(Registro vetor[], int indice_inf, int indice_sup) {
+    // Se houver ao menos um par de elementos a comparar...
+    if (indice_inf < indice_sup) {
+        // Encontra o meio do segmento em questao
+        int indice_meio = (indice_inf + indice_sup) / 2;
+
+        // Chama mergesort para a metade inferior
+        mergesort(vetor, indice_inf, indice_meio);
+
+        // Chama mergesort para a metade superior
+        mergesort(vetor, indice_meio+1, indice_sup);
+
+        // Intercala (ordena) as metades que jah estao ordenadas internamente
+        // pelas chamadas recursivas
+        intercala(vetor, indice_inf, indice_meio, indice_sup);
+    }
+}
+
 

@@ -15,7 +15,8 @@ int main(int argc, char* argv[]) {
         preenche_registro_aleatorio(banco_de_dados + i); // (&banco_de_dados[i])
         imprime_registro(banco_de_dados + i);
     }
-    radixsort(banco_de_dados, n);
+    //radixsort(banco_de_dados, n);
+    mergesort(banco_de_dados, 0, n-1);
     puts("<<< Depois da ordenacao:");
     for (i=0; i<n; ++i) {
         imprime_registro(banco_de_dados + i);
