@@ -116,8 +116,10 @@ static void intercala(Registro vetor[], int inicio, int meio, int fim) {
     memcpy(copia, &vetor[inicio], tamanho_segmento * sizeof(Registro));
 
     // Define dois indices que percorrerao as respectivas metades da esquerda
-    // para a direita
-    int ind_metade_esq = inicio, ind_metade_dir = meio+1;
+    // para a direita; antes, normaliza os indices de 'meio' e 'fim' para serem
+    // usados na copia, que inicia com indice 0 (zero)
+    meio -= inicio, fim -= inicio;
+    int ind_metade_esq = 0, ind_metade_dir = meio+1;
 
     // Enquanto houver elementos a comparar nas DUAS metades...
     int i = inicio;
@@ -159,5 +161,4 @@ void mergesort(Registro vetor[], int indice_inf, int indice_sup) {
         intercala(vetor, indice_inf, indice_meio, indice_sup);
     }
 }
-
 
