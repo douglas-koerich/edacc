@@ -162,3 +162,29 @@ void mergesort(Registro vetor[], int indice_inf, int indice_sup) {
     }
 }
 
+void quicksort(Registro vetor[], int indice_inf, int indice_sup) {
+    if (indice_inf >= indice_sup) { // se o segmento eh unitario ou nulo
+        return;
+    }
+    int meio =(indice_inf + indice_sup) / 2;
+
+    // Declara o pivo com o mesmo tipo da chave do registro
+    unsigned valor_pivo = vetor[meio].chave;
+
+    int esq = indice_inf, dir = indice_sup;
+    while (esq <= dir) { // enquanto nao houver cruzamento
+                         // CUIDADO! Isso pode acontecer em qualquer lugar do segmento
+                         // (nao obrigatoriamente no meio dele)!
+        while (vetor[esq].chave < valor_pivo) ++esq; // continua enquanto ah esq eh menor
+        while (vetor[dir].chave > valor_pivo) --dir; // continua enquanto ah dir eh maior
+        if (esq <= dir) { // nao se cruzaram ainda?
+            troca_registros(vetor + esq, vetor + dir);
+            ++esq, --dir; // continua nos indices seguintes
+        }
+    }
+    // Trocas concluidas, chama quicksort para os dois segmentos delimitados
+    // pelos extremos e o ponto de cruzamento
+    quicksort(vetor, indice_inf, dir); // porcao inferior do segmento
+    quicksort(vetor, esq, indice_sup); // porcao superior
+}
+
