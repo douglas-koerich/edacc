@@ -26,7 +26,8 @@ int main(int argc, char* argv[]) {
     scanf("%u", &x);
     comparacoes = 0;
     //int indice = sequencial(banco_de_dados, n, x);
-    int indice = binaria(banco_de_dados, 0, n-1, x);
+    //int indice = binaria(banco_de_dados, 0, n-1, x);
+    int indice = interpolacao(banco_de_dados, 0, n-1, x);
     if (indice == -1) {
         printf("Chave nao encontrada apos %u comparacoes!\n", comparacoes);
     } else {
