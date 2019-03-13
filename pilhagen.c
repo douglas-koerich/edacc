@@ -37,7 +37,7 @@ void dump(const Pilha* p) {
     printf("(BASE) ");
     int i;
     for (i=0; i<=p->topo; ++i) { // para todos os indices validos do vetor
-        unsigned char* pbyte = &p->vetor[i]; // endereco do primeiro byte do tipo
+        unsigned char* pbyte = (unsigned char*) &p->vetor[i]; // endereco do primeiro byte do tipo
         int b;
         printf("{ ");
         for (b=0; b<sizeof(Tipo); ++b, ++pbyte) { // para cada um dos bytes do tipo...
