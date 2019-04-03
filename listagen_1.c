@@ -108,11 +108,10 @@ void rem_valor(Lista* l, const Tipo* v) {
             } else {
                 l->cabeca = i->proximo;
             }
-            free(i);
-            // NAO avanca com o ponteiro i_ant, porque ele continua sendo
-            // o anterior da lista que continua! O que se precisa fazer eh
-            // reposicionar o "cursor" de percurso na lista para o noh seguinte
-            i = i_ant->proximo;
+            // Avanca o cursor para o proximo mas MANTEM o anterior onde estah
+            Noh* x = i;
+            i = i->proximo;
+            free(x);
             --l->num_nohs;
         } else {
             // Soh avanca o par de ponteiros i_ant/i se nao houve remocao
