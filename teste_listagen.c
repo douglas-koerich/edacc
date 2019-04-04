@@ -36,9 +36,14 @@ int main(void) {
 
     char c;
     rem_fim(exemplo, &c);
-    printf("Removido caractere '%c'\n", c);
+    printf("Removido caractere '%c' do fim.\n", c);
+    rem_inicio(exemplo, &c);
+    printf("Removido caractere '%c' do inicio.\n", c);
+    
+    /*
     c = 'l'; // caractere a ser removido
     rem_valor(exemplo, &c);
+    */
 
     puts("Lista DEPOIS das remocoes:");
     dump(exemplo);

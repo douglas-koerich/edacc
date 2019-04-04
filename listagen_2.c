@@ -87,6 +87,16 @@ void ins_fim(Lista* l, const Tipo* v) {
 }
 
 void rem_inicio(Lista* l, Tipo* v) {
+    Noh* i = l->cabeca;
+    l->cabeca = i->proximo;
+    memcpy(v, &i->valor, sizeof(Tipo));
+    free(i);
+    if (l->cabeca == NULL) {
+        l->cauda = NULL;
+    } else {
+        l->cabeca->anterior = NULL;
+    }
+    --l->num_nohs;
 }
 
 void rem_fim(Lista* l, Tipo* v) {

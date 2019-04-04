@@ -44,11 +44,11 @@ void dump(const Lista* l) {
     for (i=l->cabeca; i!=NULL; i=i->proximo) { // para todos os nohs da lista
         unsigned char* pbyte = (unsigned char*) &i->valor; // endereco do primeiro byte do tipo
         int b;
-        printf("{ ");
+        printf("%p{ ", i); // imprime a localizacao do noh na memoria
         for (b=0; b<sizeof(Tipo); ++b, ++pbyte) { // para cada um dos bytes do tipo...
             printf("%02hhX ", *pbyte); // ... imprime o byte da vez em hexa
         }
-        printf("}@%p ", i); // imprime a localizacao do noh na memoria
+        printf("}->%p ", i->proximo); // imprime a localizacao do PROXIMO noh na memoria
     }
     printf("(CAUDA)");
 }
@@ -78,6 +78,11 @@ void ins_fim(Lista* l, const Tipo* v) {
 }
 
 void rem_inicio(Lista* l, Tipo* v) {
+    Noh* i = l->cabeca;
+    l->cabeca = i->proximo;
+    memcpy(v, &i->valor, sizeof(Tipo));
+    free(i);
+    --l->num_nohs;
 }
 
 void rem_fim(Lista* l, Tipo* v) {
