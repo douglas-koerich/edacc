@@ -32,5 +32,8 @@ void rem_pos_fixa(Lista*, unsigned, Tipo*);
 void rem_pos_rand(Lista*, Tipo*);
 void rem_valor(Lista*, const Tipo*);
 
+// Prototipo da operacao solicitada pelo exercicio 2 da lista correspondente
+bool iguais(const Lista*, const Lista*);
+
 #endif
 

@@ -127,3 +127,39 @@ void rem_valor(Lista* l, const Tipo* v) {
     }
 }
 
+// Exercicio 2 da lista referente ao tema "Listas Encadeadas"
+bool iguais(const Lista* l1, const Lista* l2) {
+    Noh* n1 = l1->cabeca;
+    Noh* n2 = l2->cabeca;
+    while (n1 != NULL && n2 != NULL) {
+        if (n1->valor != n2->valor) {
+            return false;
+        }
+        n1 = n1->proximo;
+        n2 = n2->proximo;
+    }
+    if (n1 != NULL || n2 != NULL) {
+        // O laco while termina quando uma OU ambas as listas chegam ao fim;
+        // se a outra nao chegou tambem, entao nao sao iguais
+        return false;
+    }
+    return true;
+}
+
+// Exercicio 6 da lista referente ao tema "Recursividade"
+static size_t tamanho_r(const Noh* n) {
+    if (n == NULL) {
+        return 0;
+    }
+    return tamanho_r(n->proximo) + 1; // a contagem que vier da sequencia na
+                                      // lista, mais 1 correspondente a este noh
+}
+
+static size_t tamanho(const Lista* l) {
+    // Como o tipo 'Lista' nao pode ser usado recursivamente - porque
+    // nao tem a referencia do proximo noh -, a solucao implica o uso
+    // de uma funcao auxiliar - esta, sim, recursiva!
+    return tamanho_r(l->cabeca);
+}
+
+
