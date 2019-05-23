@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <time.h>
 #include "registro.h"
-//#include "ordenacao.h"
-#include "ordenacao_r.h"
+#include "ordenacao.h"
+//#include "ordenacao_r.h"
 
 void imprime_chaves(R [*], size_t);
 
@@ -41,8 +41,8 @@ int main(int argc, char* argv[]) {
             imprime_chaves(vetor, n);
         }
         clock_t antes = clock();
-        // ordena(vetor, n);
-        ordena(vetor, 0, n-1);
+        ordena(vetor, n);
+        // ordena(vetor, 0, n-1);
         clock_t depois = clock();
         
         fprintf(arq, "%zd;%d\n", n, depois-antes);
