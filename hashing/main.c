@@ -19,25 +19,29 @@ int main(void) {
     }
 
     // Breve inspecao na tabela de hashing
+    puts("### Tabela apos insercoes ###");
     debug(hash);
+    putchar('\n');
 
     // Exemplo de busca
     unsigned x;
     printf("Digite uma chave para busca: ");
     scanf("%u", &x);
 
-    i = busca(hash, x);
-    if (i == -1) {
+    R* reg = busca(hash, x);
+    if (reg == NULL) {
         puts("Chave nao encontrada");
     } else {
-        printf("Chave encontrada no indice %d\n", i);
+        printf("Chave encontrada no endereco %p\n", reg);
 
         R useless;
         assert(remover(hash, &useless, x)); // eu "agarantchio" que vai remover
     }
 
     // Inspeciona pra ver a chave removida
+    puts("### Tabela apos remocao ###");
     debug(hash);
+    putchar('\n');
 
     destroi(hash);
     return EXIT_SUCCESS;
