@@ -2,15 +2,25 @@
 #define PILHA_H
 
 #include <stdbool.h>
+#include "deque.h"
 
-struct Pilha;
-typedef struct Pilha Pilha;
+typedef struct Deque Pilha;
 
-Pilha* cria_p(void); // pra nao confundir com a funcao 'cria' da fila
-void destroi_p(Pilha*); // idem para 'destroi'
-bool underflow_p(const Pilha*); // ibidem para 'underflow'
-bool push(Pilha*, char);
-bool pop(Pilha*, char*);
+inline extern Pilha* cria_p(void) { // pra nao confundir com a funcao 'cria' da fila
+    return (Pilha*) cria();
+}
+inline extern void destroi_p(Pilha* p) { // idem para 'destroi'
+    return destroi((Deque*) p);
+}
+inline extern bool underflow_p(const Pilha* p) { // ibidem para 'underflow'
+    return underflow((const Deque*) p);
+}
+inline extern bool push(Pilha* p, char c) {
+    return enqueue((Deque*) p, c, FIM); // tanto a insercao quanto...
+}
+inline extern bool pop(Pilha* p, char* pc) {
+    return dequeue((Deque*) p, pc, FIM); // ... a remocao sao feitas na mesma extremidade
+}
 
 #endif // PILHA_H
 

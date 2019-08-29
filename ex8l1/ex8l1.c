@@ -12,7 +12,7 @@ int main(void) {
     Fila* f = cria_f();
 
     for (i=0; i<sizeof(exemplo)/sizeof(char); ++i) {
-        if (enqueue(f, exemplo[i])) {
+        if (enqueue_f(f, exemplo[i])) {
             printf("Inserido o caractere %c\n", exemplo[i]);
         }
     }
@@ -37,12 +37,12 @@ void inverte_fila(Fila* f) {
 
     char c;
     while (!underflow_f(f)) {
-        dequeue(f, &c);
+        dequeue_f(f, &c);
         push(apoio, c);
     }
     while (!underflow_p(apoio)) {
         pop(apoio, &c);
-        enqueue(f, c);
+        enqueue_f(f, c);
     }
 
     destroi_p(apoio);
