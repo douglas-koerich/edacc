@@ -18,4 +18,9 @@ bool overflow(const Fila*);
 void imprime(const Fila*);
 #endif
 
+#ifdef EX6L1
+#include <stdlib.h>
+size_t size(const Fila*);
+#endif // EX6L1
+
 #endif // FILA_H

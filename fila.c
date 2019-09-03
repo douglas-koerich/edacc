@@ -93,3 +93,12 @@ void imprime(const Fila* f) {
 }
 #endif
 
+#ifdef EX6L1
+size_t size(const Fila* f) {
+    if (f->fim >= f->inicio) {
+        return f->fim - f->inicio;
+    }
+    return f->fim - (f->inicio - TAM_FILA);
+}
+#endif
+
