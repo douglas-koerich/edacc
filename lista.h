@@ -21,10 +21,10 @@ void inserir(Lista*, char, Posicao, int);
 bool remover(Lista*, char*, Posicao, int);
 void remover_v(Lista*, char); // remover o elemento passado como parametro
 bool underflow(const Lista*);
-bool busca(const Lista*, char); // verifica se elemento existe
-                                // (num caso mais pratico passaria um campo
-                                // e retornaria o endereco do registro que
-                                // o contem e que estah em um noh da lista)
+bool buscar(const Lista*, char); // verifica se elemento existe
+                                 // (num caso mais pratico passaria um campo
+                                 // e retornaria o endereco do registro que
+                                 // o contem e que estah em um noh da lista)
 
 // NAO se tem a operacao overflow()!
 #ifdef DEBUG

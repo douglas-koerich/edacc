@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "lista.h"
 
 struct Noh {
     char elemento; // valor armazenado na lista (lista de caracteres)
@@ -36,4 +37,126 @@ bool underflow(const Lista* l) {
     return l->cabeca == NULL;
 }
 
+void inserir(Lista* l, char c, Posicao p, int i) {
+    // Se 'p' nao for igual a FIXA, o parametro 'i' (numero da
+    // posicao onde deveria ser inserido) eh ignorado
+    if (l == NULL) {
+        return;
+    }
+    Noh* n = malloc(sizeof(Noh));
+    n->elemento = c;
+    switch (p) {
+        case INICIO:
+            n->proximo = l->cabeca; // salva o endereco do antigo primeiro
+                                    // noh no novo noh (agora, o primeiro)
+            l->cabeca = n;
+            break;
 
+        case FIM: {
+            n->proximo = NULL; // o novo noh sempre terah NULL como seu proximo
+            // Se a lista estah vazia, inserir no FIM eh a mesma operacao que
+            // inserir no INICIO
+            if (l->cabeca == NULL) {
+                l->cabeca = n;
+                break; // interrompe o case
+            }
+            Noh* u = l->cabeca;
+            while (u->proximo != NULL) { // enquanto nao encontra o ULTIMO da lista
+                u = u->proximo; // ... vai "caminhando" ao longo da lista
+            }
+            u->proximo = n; // o proximo do antigo ultimo eh o novo ultimo
+            break;
+        }
+
+        case CRESCENTE:
+            break;
+
+        case DECRESCENTE:
+            break;
+
+        case FIXA:
+            break;
+
+        default:
+            puts("Posicao INVALIDA!");
+            free(n); // libera o noh alocado!
+    }
+}
+
+bool remover(Lista* l, char* pc, Posicao p, int i) {
+    if (l == NULL || underflow(l)) {
+        return false;
+    }
+    Noh* n;
+    switch (p) {
+        case INICIO:
+            n = l->cabeca;
+            l->cabeca = n->proximo;
+            break;
+
+        case FIM: {
+            Noh* ant = NULL; // Eh preciso um ponteiro para o noh anterior...
+            n = l->cabeca;
+            while (n->proximo != NULL) {
+                ant = n; // ... que lembre o endereco do PENULTIMO quando achar
+                         // o ultimo
+                n = n->proximo;
+            }
+            // Se de fato existe um anterior a este noh (n) que eh o ultimo...
+            if (ant != NULL) {
+                ant->proximo = NULL;
+            } else { // Se nao existe, entao o ultimo eh o UNICO!
+                l->cabeca = NULL; // lista volta a ficar vazia
+            }
+            break;
+        }
+
+        case FIXA:
+            break;
+
+        default: // inclui CRESCENTE e DECRESCENTE
+            puts("Posicao INVALIDA!");
+            return false;
+    }
+    // Se o ponteiro 'pc' for NULL, quem chamou 'remover' nao estah
+    // interessado em obter o elemento que estava no noh removido
+    if (pc != NULL) {
+        *pc = n->elemento;
+    }
+    free(n);
+    return true;
+}
+
+bool buscar(const Lista* l, char x) {
+    if (l == NULL || underflow(l)) {
+        return false;
+    }
+    Noh* n = l->cabeca;
+    while (n != NULL) { // enquanto houver noh para inspecionar...
+        if (n->elemento == x) { // compara o elemento com a busca
+            return true;
+        }
+        n = n->proximo;
+    }
+    return false; // percorreu toda a lista sem encontrar o valor
+}
+
+#ifdef DEBUG
+void imprimir(const Lista* l) {
+    if (l == NULL) {
+        puts("Lista INVALIDA");
+        return;
+    }
+    if (underflow(l)) {
+        puts("Lista VAZIA");
+        return;
+    }
+    Noh* n = l->cabeca;
+    printf("[CABECA] ");
+    while (n != NULL) {
+        printf("%c@%p-->", n->elemento, n);
+        n = n->proximo;
+    }
+    puts(" [CAUDA]");
+}
+#endif
