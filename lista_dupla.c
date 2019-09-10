@@ -1,28 +1,21 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include "lista.h"
 
 struct Noh {
-    char elemento; // valor armazenado na lista (lista de caracteres)
+    char elemento;
     struct Noh* proximo; // endereco do noh sucessor (seguinte) na lista
+    struct Noh* anterior; // endereco do noh antecessor na lista
 };
 typedef struct Noh Noh;
 
 struct Lista {
     Noh* cabeca; // endereco do primeiro noh da lista
-
-    // Campos adicionais que comporiam um noh-cabecalho da lista
-    size_t tamanho; // numero de nohs (evita percorrer para contar)
-    Noh* cauda; // leva diretamente ao ultimo noh da lista
 };
 
 Lista* criar(void) {
     Lista* l = malloc(sizeof(Lista));
     l->cabeca = NULL;
-
-    // Preenche os campos adicionais do noh-cabecalho
-    l->tamanho = 0;
-    l->cauda = NULL;
-
     return l;
 }
 
@@ -42,14 +35,7 @@ bool underflow(const Lista* l) {
     if (l == NULL) {
         return false;
     }
-    return l->cabeca == NULL; // return l->tamanho == 0;
-}
-
-size_t comprimento(const Lista* l) {
-    if (l == NULL) {
-        return 0;
-    }
-    return l->tamanho;
+    return l->cabeca == NULL;
 }
 
 void inserir(Lista* l, char c, Posicao p, int i) {
@@ -62,23 +48,21 @@ void inserir(Lista* l, char c, Posicao p, int i) {
     n->elemento = c;
     switch (p) {
         case INICIO:
+            n->anterior = NULL; // novo noh nunca tem um anterior
             n->proximo = l->cabeca; // salva o endereco do antigo primeiro
                                     // noh no novo noh (agora, o primeiro)
-            l->cabeca = n;
-            if (l->cauda == NULL) {
-                l->cauda = n;
+            if (l->cabeca != NULL) { // existia um noh inicial?
+                l->cabeca->anterior = n; // o anterior dele eh o novo noh
             }
+            l->cabeca = n;
             break;
 
         case FIM: {
             n->proximo = NULL; // o novo noh sempre terah NULL como seu proximo
-            // TODO: usar o ponteiro 'cauda' disponivel no noh-cabecalho para
-            // buscar (sem um laco) o ultimo noh da lista
-            // ...
-
             // Se a lista estah vazia, inserir no FIM eh a mesma operacao que
             // inserir no INICIO
             if (l->cabeca == NULL) {
+                n->anterior = NULL; // alem de ultimo, eh o primeiro
                 l->cabeca = n;
                 break; // interrompe o case
             }
@@ -87,6 +71,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
                 u = u->proximo; // ... vai "caminhando" ao longo da lista
             }
             u->proximo = n; // o proximo do antigo ultimo eh o novo ultimo
+            n->anterior = u; // novo noh tem como anterior o antigo ultimo
             break;
         }
 
@@ -103,7 +88,6 @@ void inserir(Lista* l, char c, Posicao p, int i) {
             puts("Posicao INVALIDA!");
             free(n); // libera o noh alocado!
     }
-    ++l->tamanho;
 }
 
 bool remover(Lista* l, char* pc, Posicao p, int i) {
@@ -115,26 +99,23 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
         case INICIO:
             n = l->cabeca;
             l->cabeca = n->proximo;
-            if (l->cabeca == NULL) {
-                l->cauda = NULL;
+            if (l->cabeca != NULL) { // se existia um segundo que se tornou
+                                     // primeiro noh...
+                l->cabeca->anterior = NULL; // deve marca-lo como tal
             }
             break;
 
         case FIM: {
-            Noh* ant = NULL; // Eh preciso um ponteiro para o noh anterior...
             n = l->cabeca;
             while (n->proximo != NULL) {
-                ant = n; // ... que lembre o endereco do PENULTIMO quando achar
-                         // o ultimo
                 n = n->proximo;
             }
             // Se de fato existe um anterior a este noh (n) que eh o ultimo...
-            if (ant != NULL) {
-                ant->proximo = NULL;
+            if (n->anterior != NULL) {
+                n->anterior->proximo = NULL;
             } else { // Se nao existe, entao o ultimo eh o UNICO!
                 l->cabeca = NULL; // lista volta a ficar vazia
             }
-            l->cauda = ant;
             break;
         }
 
@@ -151,7 +132,6 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
         *pc = n->elemento;
     }
     free(n);
-    --l->tamanho = 0;
     return true;
 }
 
@@ -182,7 +162,7 @@ void imprimir(const Lista* l) {
     Noh* n = l->cabeca;
     printf("[CABECA] ");
     while (n != NULL) {
-        printf("%c@%p-->", n->elemento, n);
+        printf("%c@%p<-->", n->elemento, n);
         n = n->proximo;
     }
     puts(" [CAUDA]");
