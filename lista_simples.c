@@ -33,7 +33,7 @@ void destruir(Lista* l) {
     // Eh importante (seria um ERRO nao faze-lo) liberar todos os
     // nohs da memoria antes de perder os enderecos de referencia a eles
     while (!underflow(l)) {
-        remover(l, NULL, INICIO, 0); // NULL e 0 serao ignorados
+        remover(l, NULL, CABECA, 0); // NULL e 0 serao ignorados
     }
     free(l); // somente apos remover da cabeca em diante...
 }
@@ -61,7 +61,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
     Noh* n = malloc(sizeof(Noh));
     n->elemento = c;
     switch (p) {
-        case INICIO:
+        case CABECA:
             n->proximo = l->cabeca; // salva o endereco do antigo primeiro
                                     // noh no novo noh (agora, o primeiro)
             l->cabeca = n;
@@ -70,7 +70,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
             }
             break;
 
-        case FIM: {
+        case CAUDA: {
             n->proximo = NULL; // o novo noh sempre terah NULL como seu proximo
             // TODO: usar o ponteiro 'cauda' disponivel no noh-cabecalho para
             // buscar (sem um laco) o ultimo noh da lista
@@ -112,7 +112,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
     }
     Noh* n;
     switch (p) {
-        case INICIO:
+        case CABECA:
             n = l->cabeca;
             l->cabeca = n->proximo;
             if (l->cabeca == NULL) {
@@ -120,7 +120,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
             }
             break;
 
-        case FIM: {
+        case CAUDA: {
             Noh* ant = NULL; // Eh preciso um ponteiro para o noh anterior...
             n = l->cabeca;
             while (n->proximo != NULL) {
@@ -189,7 +189,7 @@ void imprimir(const Lista* l) {
 }
 #endif
 
-bool compara(const Lista* l1, const Lista* l2) {
+bool comparar(const Lista* l1, const Lista* l2) {
     // Retorna true se as duas listas NAO existem
     if (l1 == NULL) {
         return l2 == NULL;

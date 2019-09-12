@@ -8,8 +8,8 @@ struct Lista; // definicao opaca do tipo "Lista"
 typedef struct Lista Lista;
 
 enum Posicao {
-    INICIO,      // para insercao (remocao) na (da) cabeca da lista
-    FIM,         // idem para a cauda da lista
+    CABECA,      // para insercao (remocao) no (do) inicio da lista
+    CAUDA,       // idem para o fim da lista
     CRESCENTE,   // para insercao em classificacao crescente dos elementos
     DECRESCENTE, // idem para classificacao decrescente
     FIXA         // para insercao (remoca) na (da) n-esima posicao da lista
@@ -34,7 +34,8 @@ void imprimir(const Lista*);
 #endif
 
 // Operacoes relativas a exercicios da lista
-bool compara(const Lista*, const Lista*); // exercicio 2
+bool comparar(const Lista*, const Lista*); // exercicio 2
+void inverter(Lista*); // exercicio 8
 
 #endif // LISTA_H
 

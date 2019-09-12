@@ -7,19 +7,19 @@
 typedef struct Deque Pilha;
 
 inline extern Pilha* cria_p(void) { // pra nao confundir com a funcao 'cria' da fila
-    return (Pilha*) cria();
+    return (Pilha*) cria_d();
 }
 inline extern void destroi_p(Pilha* p) { // idem para 'destroi'
-    return destroi((Deque*) p);
+    return destroi_d((Deque*) p);
 }
 inline extern bool underflow_p(const Pilha* p) { // ibidem para 'underflow'
-    return underflow((const Deque*) p);
+    return underflow_d((const Deque*) p);
 }
 inline extern bool push(Pilha* p, char c) {
-    return enqueue((Deque*) p, c, FIM); // tanto a insercao quanto...
+    return enqueue_d((Deque*) p, c, FIM); // tanto a insercao quanto...
 }
 inline extern bool pop(Pilha* p, char* pc) {
-    return dequeue((Deque*) p, pc, FIM); // ... a remocao sao feitas na mesma extremidade
+    return dequeue_d((Deque*) p, pc, FIM); // ... a remocao sao feitas na mesma extremidade
 }
 
 #endif // PILHA_H

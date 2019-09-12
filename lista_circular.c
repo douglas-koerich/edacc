@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lista.h"
+#include "ex8l1/pilha.h" // uso da pilha no exercicio 8 (operacao 'inverter')
 
 struct Noh {
     char elemento;
@@ -26,7 +27,7 @@ void destruir(Lista* l) {
     // Eh importante (seria um ERRO nao faze-lo) liberar todos os
     // nohs da memoria antes de perder os enderecos de referencia a eles
     while (!underflow(l)) {
-        remover(l, NULL, INICIO, 0); // NULL e 0 serao ignorados
+        remover(l, NULL, CABECA, 0); // NULL e 0 serao ignorados
     }
     free(l); // somente apos remover da cabeca em diante...
 }
@@ -48,8 +49,8 @@ void inserir(Lista* l, char c, Posicao p, int i) {
     n->elemento = c;
     switch (p) {
         // Na lista circular, as operacoes nos extremos sao a mesma operacao
-        case INICIO:
-        case FIM:
+        case CABECA:
+        case CAUDA:
             if (l->cauda == NULL) { // lista originalmente vazia?
                 n->proximo = n; // cauda tem como proximo ela mesma
                 l->cauda = n;
@@ -57,7 +58,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
                 n->proximo = l->cauda->proximo; // novo noh aponta para cabeca
                 l->cauda->proximo = n; // novo noh inserido entre a cauda e a
                                        // cabeca
-                if (p == FIM) {
+                if (p == CAUDA) {
                     l->cauda = n; // soh muda a referencia da cauda se a
                                   // operacao solicitada era insercao no FIM
                 }
@@ -85,7 +86,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
     }
     Noh* n;
     switch (p) {
-        case INICIO:
+        case CABECA:
             n = l->cauda->proximo;
             if (l->cauda->proximo != n->proximo) { // nao aponta pra si mesmo?
                 l->cauda->proximo = n->proximo;
@@ -94,7 +95,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
             }
             break;
 
-        case FIM: {
+        case CAUDA: {
             Noh* ant; // Eh preciso um ponteiro para o noh anterior...
             n = l->cauda;
             do {
@@ -163,3 +164,24 @@ void imprimir(const Lista* l) {
 }
 #endif
 
+void inverter(Lista* l) {
+    if (l == NULL || underflow(l)) {
+        return;
+    }
+    Pilha* p = cria_p(); // pilha eh a estrutura apropriada para inversao
+
+    Noh* n = l->cauda; // precisa partir da referencia conhecida
+    do {
+        n = n->proximo; // na primeira iteracao do laco, vai ao primeiro noh
+        push(p, n->elemento); // copia elemento do noh para a pilha
+    } while (n != l->cauda); // faz o mesmo ateh o ultimo noh (inclusive)
+
+    // Ja estando na cauda novamente, sobrescreve os elementos com a retirada
+    // da pilha de apoio
+    while (!underflow_p(p)) { // sufixo _p pra underflow da PILHA
+        n = n->proximo; // comeca removendo da pilha para o primeiro noh (cabeca)
+        pop(p, &n->elemento); // escreve sobre o valor anterior deste noh
+    }
+
+    destroi_p(p);
+}

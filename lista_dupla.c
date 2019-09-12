@@ -26,7 +26,7 @@ void destruir(Lista* l) {
     // Eh importante (seria um ERRO nao faze-lo) liberar todos os
     // nohs da memoria antes de perder os enderecos de referencia a eles
     while (!underflow(l)) {
-        remover(l, NULL, INICIO, 0); // NULL e 0 serao ignorados
+        remover(l, NULL, CABECA, 0); // NULL e 0 serao ignorados
     }
     free(l); // somente apos remover da cabeca em diante...
 }
@@ -47,7 +47,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
     Noh* n = malloc(sizeof(Noh));
     n->elemento = c;
     switch (p) {
-        case INICIO:
+        case CABECA:
             n->anterior = NULL; // novo noh nunca tem um anterior
             n->proximo = l->cabeca; // salva o endereco do antigo primeiro
                                     // noh no novo noh (agora, o primeiro)
@@ -57,7 +57,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
             l->cabeca = n;
             break;
 
-        case FIM: {
+        case CAUDA: {
             n->proximo = NULL; // o novo noh sempre terah NULL como seu proximo
             // Se a lista estah vazia, inserir no FIM eh a mesma operacao que
             // inserir no INICIO
@@ -96,7 +96,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
     }
     Noh* n;
     switch (p) {
-        case INICIO:
+        case CABECA:
             n = l->cabeca;
             l->cabeca = n->proximo;
             if (l->cabeca != NULL) { // se existia um segundo que se tornou
@@ -105,7 +105,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
             }
             break;
 
-        case FIM: {
+        case CAUDA: {
             n = l->cabeca;
             while (n->proximo != NULL) {
                 n = n->proximo;

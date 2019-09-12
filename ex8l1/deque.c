@@ -10,14 +10,14 @@ struct Deque {
     int fim;     // indice de referencia para insercao
 };
 
-Deque* cria(void) {
+Deque* cria_d(void) {
     Deque* f = malloc(sizeof(Deque));
     f->vetor = malloc(sizeof(char) * TAM_DEQUE);
     f->inicio = f->fim = TAM_DEQUE-1; // ultimo indice
     return f;
 }
 
-void destroi(Deque* f) {
+void destroi_d(Deque* f) {
     if (f == NULL) {
         return;
     }
@@ -25,14 +25,14 @@ void destroi(Deque* f) {
     free(f);
 }
 
-bool underflow(const Deque* f) {
+bool underflow_d(const Deque* f) {
     if (f == NULL) {
         return false;
     }
     return f->inicio == f->fim;
 }
 
-bool overflow(const Deque* f) {
+bool overflow_d(const Deque* f) {
     if (f == NULL) {
         return false;
     }
@@ -42,8 +42,8 @@ bool overflow(const Deque* f) {
     return f->fim == f->inicio - 1;
 }
 
-bool enqueue(Deque* f, char c, Extremidade e) {
-    if (overflow(f)) {
+bool enqueue_d(Deque* f, char c, Extremidade e) {
+    if (overflow_d(f)) {
         return false;
     }
     if (e == FIM) { // caso classico da fila
@@ -66,8 +66,8 @@ bool enqueue(Deque* f, char c, Extremidade e) {
     return true;
 }
 
-bool dequeue(Deque* f, char* pc, Extremidade e) {
-    if (underflow(f)) {
+bool dequeue_d(Deque* f, char* pc, Extremidade e) {
+    if (underflow_d(f)) {
         return false;
     }
     if (pc == NULL) {
@@ -94,12 +94,12 @@ bool dequeue(Deque* f, char* pc, Extremidade e) {
 }
 
 #ifdef DEBUG
-void imprime(const Deque* f) {
+void imprime_d(const Deque* f) {
     if (f == NULL) {
         return;
     }
     printf("\nINICIO >> [");
-    if (underflow(f)) {
+    if (underflow_d(f)) {
         printf("**vazio**");
     } else {
         int i = f->inicio;

@@ -17,16 +17,16 @@ enum Extremidade { // 'enum' eh um tipo /inteiro/ com "nomes" pre-definidos
 };
 typedef enum Extremidade Extremidade; // pra nao ter que usar 'enum' no tipo
 
-Deque* cria(void);
-void destroi(Deque*);
-bool underflow(const Deque*);
-bool enqueue(Deque*, char, Extremidade);  // enqueue no INICIO ou no FIM
-bool dequeue(Deque*, char*, Extremidade); // dequeue do INICIO ou do FIM
+Deque* cria_d(void);
+void destroi_d(Deque*);
+bool underflow_d(const Deque*);
+bool enqueue_d(Deque*, char, Extremidade);  // enqueue no INICIO ou no FIM
+bool dequeue_d(Deque*, char*, Extremidade); // dequeue do INICIO ou do FIM
 
 // EXTRA
-bool overflow(const Deque*);
+bool overflow_d(const Deque*);
 #ifdef DEBUG
-void imprime(const Deque*);
+void imprime_d(const Deque*);
 #endif
 
 #endif // DEQUE_H

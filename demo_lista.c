@@ -11,20 +11,27 @@ int main(void) {
 
     for (i=1; i<sizeof(exemplo)/sizeof(char); ++i) { // divisao para calcular
                                                      // num. elementos do vetor
-        inserir(L, exemplo[i], INICIO, 0);
+        inserir(L, exemplo[i], CABECA, 0);
         printf("Adicionado o caractere %c na lista\n", exemplo[i]);
     }
-    inserir(L, exemplo[0], FIM, 0);
+    inserir(L, exemplo[0], CAUDA, 0);
 
 #ifdef DEBUG
     printf("Conteudo da lista: ");
     imprimir(L);
 #endif
 
+    inverter(L); // teste do exercicio 8
+
+#ifdef DEBUG
+    printf("Depois da inversao: ");
+    imprimir(L);
+#endif
+
     char ch;
-    remover(L, &ch, INICIO, 0);
+    remover(L, &ch, CABECA, 0);
     printf("Removido o caractere %c da lista\n", ch);
-    remover(L, &ch, FIM, 0);
+    remover(L, &ch, CAUDA, 0);
     printf("Removido tambem o caractere %c da lista\n", ch);
 
 #ifdef DEBUG
