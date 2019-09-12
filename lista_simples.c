@@ -42,7 +42,7 @@ bool underflow(const Lista* l) {
     if (l == NULL) {
         return false;
     }
-    return l->cabeca == NULL; // return l->tamanho == 0;
+    return l->cabeca == NULL; // ou: return l->tamanho == 0;
 }
 
 size_t comprimento(const Lista* l) {
@@ -151,7 +151,7 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
         *pc = n->elemento;
     }
     free(n);
-    --l->tamanho = 0;
+    --l->tamanho;
     return true;
 }
 
@@ -188,3 +188,36 @@ void imprimir(const Lista* l) {
     puts(" [CAUDA]");
 }
 #endif
+
+bool compara(const Lista* l1, const Lista* l2) {
+    // Retorna true se as duas listas NAO existem
+    if (l1 == NULL) {
+        return l2 == NULL;
+    } else if (l2 == NULL) {
+        return false;
+    }
+    // Retorna true se as duas listas estao vazias
+    if (underflow(l1)) {
+        return underflow(l2);
+    } else if (underflow(l2)) {
+        return false;
+    }
+    // Percorre as duas listas ao mesmo tempo, comparando o conteudo de
+    // cada noh das mesmas; se houver diferenca OU se encontrar o fim
+    // de uma delas antes da outra, as listas nao sao iguais
+    Noh* n1 = l1->cabeca;
+    Noh* n2 = l2->cabeca;
+
+    while (n1 != NULL && n2 != NULL) {
+        if (n1->elemento != n2->elemento) {
+            return false; // diferenca encontrada entre dois nohs!
+        }
+        n1 = n1->proximo;
+        n2 = n2->proximo; // avanca nas duas listas simultaneamente
+    }
+    if (n1 == NULL) {
+        return n2 == NULL; // retorna true se chegou ao fim nas DUAS listas
+    }
+    return false; // saiu do laco por n2 == NULL, mas n1 NAO EH!...
+}
+

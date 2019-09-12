@@ -33,5 +33,8 @@ size_t comprimento(const Lista*);
 void imprimir(const Lista*);
 #endif
 
+// Operacoes relativas a exercicios da lista
+bool compara(const Lista*, const Lista*); // exercicio 2
+
 #endif // LISTA_H
 
