@@ -72,9 +72,7 @@ void inserir(Lista* l, char c, Posicao p, int i) {
 
         case CAUDA: {
             n->proximo = NULL; // o novo noh sempre terah NULL como seu proximo
-            // TODO: usar o ponteiro 'cauda' disponivel no noh-cabecalho para
-            // buscar (sem um laco) o ultimo noh da lista
-            // ...
+            l->cauda = n;
 
             // Se a lista estah vazia, inserir no FIM eh a mesma operacao que
             // inserir no INICIO
@@ -91,13 +89,61 @@ void inserir(Lista* l, char c, Posicao p, int i) {
         }
 
         case CRESCENTE:
+        case DECRESCENTE: { // mesmo algoritmo, soh distingue na comparacao dos nohs
+            // Esta operacao parte da premissa que TODAS as insercoes anteriores
+            // foram feitas usando esse MESMO criterio!
+            Noh* x = l->cabeca;
+            Noh* ant = NULL; // precisa "lembrar" o anterior do noh em questao (x)
+            while (x != NULL) {
+                if (p == CRESCENTE && x->elemento >= n->elemento ||
+                    p == DECRESCENTE && x->elemento <= n->elemento) {
+                    break;
+                }
+                ant = x;
+                x = x->proximo;
+            }
+            if (ant == NULL) {
+                // Insercao em ordem coincidente com insercao no INICIO
+                n->proximo = l->cabeca;
+                l->cabeca = n;
+            } else {
+                n->proximo = ant->proximo;
+                ant->proximo = n;
+            }
+            if (n->proximo == NULL) { // acabou inserindo no FIM?
+                l->cauda = n;
+            }
             break;
-
-        case DECRESCENTE:
-            break;
+        }
 
         case FIXA:
-            break;
+            if (i == 1) {
+                // Insercao no INICIO
+                n->proximo = l->cabeca;
+                l->cabeca = n;
+                if (l->cauda == NULL) {
+                    l->cauda = n;
+                }
+                break; // interrompe o case
+            }
+            if (i > 1) {
+                int j = 2;
+                Noh* ant = l->cabeca;
+                Noh* x = ant->proximo;
+                while (j < i && x != NULL) {
+                    ant = x;
+                    x = x->proximo;
+                    ++j;
+                }
+                if (x == NULL) {
+                    printf("Noh '%c' adicionado ao fim da lista!\n", c);
+                    l->cauda = n;
+                }
+                n->proximo = ant->proximo;
+                ant->proximo = n;
+                break; // interrompe o case
+            }
+            // sem 'break' aqui(!), continua sobre o 'default' se i < 1
 
         default:
             puts("Posicao INVALIDA!");
@@ -139,9 +185,39 @@ bool remover(Lista* l, char* pc, Posicao p, int i) {
         }
 
         case FIXA:
-            break;
+            if (i == 1) {
+                // Remocao do INICIO
+                n = l->cabeca;
+                l->cabeca = n->proximo;
+                if (l->cabeca == NULL) {
+                    l->cauda = NULL;
+                }
+                break; // interrompe o case
+            }
+            if (i > 1) {
+                int j = 2;
+                Noh* ant = l->cabeca;
+                n = ant->proximo;
+                while (j < i && n != NULL) {
+                    ant = n;
+                    n = n->proximo;
+                    ++j;
+                }
+                if (n == NULL) {
+                    printf("Posicao %d alem do fim da lista!\n", i);
+                    return false;
+                }
+                // A remocao desse noh (n) nao pode provocar a perda
+                // da conectividade com o restante da lista!
+                ant->proximo = n->proximo;
+                if (ant->proximo == NULL) { // se 'n' era o ultimo noh da lista
+                    l->cauda = ant;
+                }
+                break; // interrompe o case
+            }
+            // sem 'break' aqui(!), continua sobre o 'default' se i < 1
 
-        default: // inclui CRESCENTE e DECRESCENTE
+        default: // inclui CRESCENTE e DECRESCENTE (opcoes invalidas pra remocao)
             puts("Posicao INVALIDA!");
             return false;
     }
@@ -167,6 +243,27 @@ bool buscar(const Lista* l, char x) {
         n = n->proximo;
     }
     return false; // percorreu toda a lista sem encontrar o valor
+}
+
+void remover_v(Lista* l, char x) {
+    if (l == NULL || underflow(l)) {
+        return;
+    }
+    Noh* ant = NULL, *n = l->cabeca;
+    while (n != NULL && n->elemento != x) {
+        ant = n;
+        n = n->proximo;
+    }
+    if (n == NULL) {
+        return;
+    }
+    if (ant != NULL) {
+        ant->proximo = n->proximo;
+    } else {
+        l->cabeca = n->proximo;
+    }
+    free(n);
+    --l->tamanho;
 }
 
 #ifdef DEBUG
