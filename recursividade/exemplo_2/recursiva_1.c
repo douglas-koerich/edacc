@@ -11,4 +11,3 @@ size_t maiores(int* vetor, size_t tamanho, int referencia) {
     return contador;
 }
 
-}
