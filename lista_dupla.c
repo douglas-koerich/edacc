@@ -168,3 +168,25 @@ void imprimir(const Lista* l) {
     puts(" [CAUDA]");
 }
 #endif
+
+Lista* conjuncao(const Lista* l1, const Lista* l2) {
+    if (l1 == NULL || l2 == NULL) {
+        return NULL; // nao ha lista formada por conjuncao (AND)
+    }
+    Lista* lE = cria();
+    Noh* n1 = l1->cabeca;
+    while (n1 != NULL) { // enquanto existe um noh em l1 para ser avaliado
+        Noh* n2 = l2->cabeca;
+        while (n2 != NULL) { // enquanto existe um noh em l2 pra comparar
+            if (n1->elemento == n2->elemento) { // existe um "E" nas listas
+                inserir(lE, n1->elemento, INICIO, 0); // adiciona na lE
+                break; // nao faz sentido continuar comparando...
+            }
+            n2 = n2->proximo; // vai para outro noh em l2 pra comparar...
+        }
+        n1 = n1->proximo; // vai para outro noh em l1 pra iniciar novo
+                          // ciclo/laco de comparacao com l2
+    }
+    return lE;
+}
+

@@ -23,4 +23,7 @@ void imprime(const Fila*);
 size_t size(const Fila*);
 #endif // EX6L1
 
+// Questao #2 da Prova do 1o. Bimestre
+void mantem_exclusivos(Fila*, Fila*);
+
 #endif // FILA_H

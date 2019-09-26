@@ -37,5 +37,8 @@ void imprimir(const Lista*);
 bool comparar(const Lista*, const Lista*); // exercicio 2
 void inverter(Lista*); // exercicio 8
 
+// Questao #1 da Prova do 1o. Bimestre
+Lista* conjuncao(const Lista*, const Lista*);
+
 #endif // LISTA_H
 
