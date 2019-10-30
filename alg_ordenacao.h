@@ -7,5 +7,7 @@
 void bolha(Reg [*], size_t);
 void selecao(Reg [*], size_t);
 void insercao(Reg [*], size_t);
+void shellsort(Reg [*], size_t);
+void radixsort(Reg [*], size_t);
 
 #endif // ALG_ORDENACAO_H

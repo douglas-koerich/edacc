@@ -25,7 +25,9 @@ int main(int argc, char* argv[]) {
 
     // bolha(database, tamanho);
     // selecao(database, tamanho);
-    insercao(database, tamanho);
+    // insercao(database, tamanho);
+    // shellsort(database, tamanho);
+    radixsort(database, tamanho);
 
     puts("Banco de dados ordenado pela chave:");
     for (i = 0; i < tamanho; ++i) {

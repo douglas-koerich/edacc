@@ -77,3 +77,46 @@ void insercao(Reg vetor[], size_t n) {
     }
 }
 
+void shellsort(Reg vetor[], size_t n) {
+    imprime_chaves(vetor, n);
+    // Antes de iniciar a ordenacao, precisa da serie de incrementos
+    // Gera enquanto k <= n (o seguinte seria o k > n)
+    int serie_incrementos[32], i = 0, k = 1; // 1 eh o primeiro valor da serie
+    while (k <= n) {
+        serie_incrementos[i++] = k;
+        k = 3 * k + 1; // formula de Shell
+    }
+    // Posiciona no primeiro incremento a ser considerado
+    i -= 2;
+    
+    // Inicia o uso dos incrementos em valores decrescentes
+    int incremento;
+    while (i >= 0) {
+        incremento = serie_incrementos[i];
+
+        // O vetor eh dividido em "segmentos virtuais", formados pelos elementos
+        // salteados de incremento em incremento; o numero de segmentos eh igual ao valor do incremento da vez :-)
+        int segmento, segmentos = incremento;
+        for (segmento = 0; segmento < incremento; ++segmento) {
+            // Compare com o algoritmo de selecao direta (original); onde se
+            // percorria o vetor de 1 em 1, percorre-se de incremento em incremento
+            int posicao;
+            for (posicao = segmento; posicao < n; posicao += incremento) {
+                int posicao_menor = posicao, outra_posicao;
+                for (outra_posicao = posicao+incremento; outra_posicao < n; outra_posicao += incremento) {
+                    if (vetor[outra_posicao].chave < vetor[posicao_menor].chave) {
+                        posicao_menor = outra_posicao;
+                    }
+                }
+                // Usando aritmetica de ponteiros :-)
+                troca(vetor + posicao, vetor + posicao_menor);
+            }
+        }
+#ifdef DEBUG
+        printf("k = %d\n", incremento);
+#endif
+        imprime_chaves(vetor, n);
+        --i; // Vai para o incremento menor, repetindo a divisao em segmento(s)
+    }
+}
+
