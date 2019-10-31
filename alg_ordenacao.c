@@ -2,7 +2,9 @@
 #include <stdio.h>
 #endif
 #include <string.h>
+#include <math.h>
 #include "registro.h"
+#include "fila_reg.h" // apoio para o algoritmo radixsort()
 #include "alg_ordenacao.h"
 
 static void imprime_chaves(const Reg vetor[], size_t n) {
@@ -117,6 +119,50 @@ void shellsort(Reg vetor[], size_t n) {
 #endif
         imprime_chaves(vetor, n);
         --i; // Vai para o incremento menor, repetindo a divisao em segmento(s)
+    }
+}
+
+void radixsort(Reg vetor[], size_t n) {
+    int digito;
+    Fila* filas_digitos[10];
+    for (digito = 0; digito < 10; ++digito) {
+        filas_digitos[digito] = cria(); // cria filas para cada digito 0-9
+        imprime(filas_digitos[digito]);
+    }
+    const int POT10_MAX = 9; // como a chave eh do tipo unsigned, o maior
+                             // valor a ser considerado eh na casa do
+                             // bilhao (10^9)
+    int pot10 = 0;
+    imprime_chaves(vetor, n);
+    while (pot10 <= POT10_MAX) {
+        int posicao, grandeza = pow(10, pot10); // unidade, dezena, centena...
+        for (posicao = 0; posicao < n; ++posicao) {
+            unsigned chave = vetor[posicao].chave;
+            if (grandeza > 1) {
+                chave /= grandeza; // retira os digitos ah direita
+                                   // da posicao do digito desejado
+            }
+            // O digito procurado estah agora na posicao mais ah direita
+            // do numero
+            digito = chave % 10;
+
+            // Copia para a fila CORRESPONDENTE ao digito da chave o
+            // registro armazenado no vetor
+            enqueue(filas_digitos[digito], vetor+posicao);
+        }
+        posicao = 0; // retorna ao inicio do vetor
+        for (digito = 0; digito < 10; ++digito) {
+            imprime(filas_digitos[digito]);
+            while (!underflow(filas_digitos[digito])) { // esvazia a fila
+                dequeue(filas_digitos[digito], vetor+posicao);
+                ++posicao;
+            }
+        }
+        imprime_chaves(vetor, n);
+        ++pot10; // para continuar na posicao do digito ah esquerda
+    }
+    for (digito = 0; digito < 10; ++digito) {
+        destroi(filas_digitos[digito]);
     }
 }
 
