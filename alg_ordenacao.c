@@ -1,6 +1,7 @@
 #ifdef DEBUG
 #include <stdio.h>
 #endif
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "registro.h"
@@ -164,5 +165,93 @@ void radixsort(Reg vetor[], size_t n) {
     for (digito = 0; digito < 10; ++digito) {
         destroi(filas_digitos[digito]);
     }
+}
+
+static void imprime_trecho(const Reg vetor[], int inferior, int superior) {
+#ifdef DEBUG
+    int i = 0;
+    while (i <= superior) {
+        if (i < inferior) {
+            printf("     ");
+        } else {
+            printf("%4u ", vetor[i].chave);
+        }
+        ++i;
+    }
+    putchar('\n');
+#endif
+}
+
+// Funcao auxiliar interna, nao precisa ser visivel de fora (por isso, static)
+static void merge(Reg v[], int i, int m, int s) {
+    size_t tamanho = s - i + 1; // numero de elementos desse [trecho do] vetor
+
+    // Precisa de um vetor auxiliar do mesmo tamanho para armazenar os
+    // elementos em suas novas posicoes, sem sobrescrever as metades que
+    // estao sendo comparadas
+    Reg* auxiliar = malloc(tamanho * sizeof(Reg));
+
+    // Enquanto houver algo nas duas metades para ser comparado...
+    int a = 0, e = i, d = m+1;
+    while (e <= m && d <= s) {
+        if (v[e].chave < v[d].chave) { // vai para o auxiliar quem tem o menor
+            memcpy(&auxiliar[a], &v[e], sizeof(Reg));
+            ++e;
+        } else {
+            memcpy(&auxiliar[a], &v[d], sizeof(Reg));
+            ++d;
+        }
+        ++a;
+    }
+    // Um dos lacos abaixo nao vai executar porque a mesma condicao
+    // ficou falsa no laco anterior
+    while (e <= m) {
+        memcpy(&auxiliar[a++], &v[e++], sizeof(Reg));
+    }
+    while (d <= s) {
+        memcpy(&auxiliar[a++], &v[d++], sizeof(Reg));
+    }
+
+    // Transporta os elementos reordenados para o vetor original
+    memcpy(&v[i], auxiliar, tamanho*sizeof(Reg)); // a partir da extremidade inf.
+
+    free(auxiliar);
+}
+
+void mergesort(Reg vetor[], int inf, int sup) {
+    imprime_trecho(vetor, inf, sup);
+    if (inf >= sup) { // nao ha como dividir novamente o vetor?
+        return;
+    }
+    int meio = (inf + sup) / 2;
+    mergesort(vetor, inf, meio); // chamadas recursivas
+    mergesort(vetor, meio+1, sup);
+    merge(vetor, inf, meio, sup); // intercalacao entre as metades
+    imprime_trecho(vetor, inf, sup);
+}
+
+void quicksort(Reg vetor[], int inf, int sup) {
+    if (inf >= sup) {
+        return;
+    }
+    imprime_trecho(vetor, inf, sup);
+    int meio = (inf + sup) / 2;
+    unsigned pivo = vetor[meio].chave; // referencia de comparacao
+    int esq = inf, dir = sup;
+    while (esq <= dir) { // enquanto indices nao se cruzarem...
+        while (vetor[esq].chave < pivo) { // chaves ah esquerda devem ser menores
+            ++esq;
+        }
+        while (vetor[dir].chave > pivo) {
+            --dir;
+        }
+        if (esq <= dir) {
+            troca(&vetor[esq], &vetor[dir]);
+            ++esq, --dir;
+        }
+    }
+    quicksort(vetor, inf, dir); // trecho ah esquerda do cruzamento
+    quicksort(vetor, esq, sup); // trecho ah direita
+    imprime_trecho(vetor, inf, sup);
 }
 
