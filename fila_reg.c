@@ -3,7 +3,7 @@
 #include <string.h> // para usar memcpy()
 #include "fila_reg.h"
 
-#define TAM_FILA 1024
+#define TAM_FILA 512*1024
 
 struct Fila { // customizacao da estrutura de dados original (1o. bim.)
     Reg* vetor;

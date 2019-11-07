@@ -29,5 +29,7 @@ size_t comprimento(const Lista*);
 
 void imprimir(const Lista*);
 
+void ordenar(Lista*); // reorganizar os nohs da lista em ordem crescente
+
 #endif // LISTA_REG_H
 

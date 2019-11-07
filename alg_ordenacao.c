@@ -76,6 +76,8 @@ void insercao(Reg vetor[], size_t n) {
         // Poe o elemento que estava sendo comparado na sua
         // posicao final
         memcpy(vetor+posicao_anterior+1, aux, sizeof(Reg));
+
+        free(aux);
         imprime_chaves(vetor, n);
     }
 }
