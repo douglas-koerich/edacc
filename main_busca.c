@@ -38,7 +38,8 @@ int main(int argc, char* argv[]) {
     printf("Digite uma chave para ser localizada no vetor: ");
     scanf("%u", &chave);
 
-    int local = binaria(database, 0, tamanho-1, chave);
+    // int local = binaria(database, 0, tamanho-1, chave);
+    int local = interpolacao(database, 0, tamanho-1, chave);
     if (local == -1) {
         puts("Chave nao foi encontrada no vetor!");
     } else {
