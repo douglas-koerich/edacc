@@ -1,0 +1,84 @@
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+#include <stdlib.h>
+#include "hashing.h"
+
+struct Hash {
+    Reg* vetor; // alocado dinamicamente na criacao
+    size_t m; // comprimento do vetor originalmente alocado
+    size_t n; // numero de registros armazenados na tabela
+    unsigned M; // fator de divisao da funcao de hashing
+};
+
+// Funcao auxiliar que calcula o maior numero primo maior que dado numero
+static unsigned primo_maior(unsigned num) {
+    bool eh_primo = false;
+    unsigned teste = num;
+    while (!eh_primo) {
+        eh_primo = true;
+        int inter;
+        for (inter = 2; inter < teste; ++inter) {
+            if (teste % inter == 0) {
+                eh_primo = false;
+                break;
+            }
+        }
+        if (eh_primo == false) {
+            ++teste;
+        }
+    }
+    return teste;
+}
+
+Hash* criar(size_t num_total_posicoes) {
+    Hash* h = malloc(sizeof(Hash));
+    h->n = 0; // nenhum elemento armazenado
+    h->m = num_total_posicoes; // capacidade do vetor
+    h->M = primo_maior(h->m);
+    h->vetor = calloc(h->m, sizeof(Reg)); // aloca vetor de registros
+    return h;
+}
+
+void destruir(Hash* h) {
+    free(h->vetor);
+    free(h);
+}
+
+// Funcao de hashing utilizada para calcular a posicao com base
+// no valor da chave
+static int hashing(const Hash* h, unsigned chave) {
+    // Metodo da divisao
+    int posicao = chave % h->M;
+    if (posicao >= h->m) { // se o resto eh maior que o ultimo indice...
+        posicao -= h->m;
+    }
+#ifdef DEBUG
+    printf("Para a chave %u foi definida a posicao %d\n", chave, posicao);
+#endif
+    return posicao;
+}
+
+void inserir(Hash* h, const Reg* r) {
+    // Calcula a posicao onde serah armazenado o novo registro
+    int posicao = hashing(h, r->chave);
+}
+
+size_t tamanho(const Hash* h) {
+    return h->n; // numero de elementos armazenados na tabela
+}
+
+void imprimir(const Hash* h) {
+#ifdef DEBUG
+    int i;
+    for (i = 0; i < h->m; ++i) {
+        if (h->vetor[i].chave == 0) {
+            printf("(<vazio>) ");
+        } else {
+            printf("(%u,%c) ", h->vetor[i].chave, h->vetor[i].dado);
+        }
+    }
+    putchar('\n');
+#endif
+}
+
