@@ -125,6 +125,26 @@ bool remover(Lista* l, Reg* pr, Posicao p, int i) {
     return true;
 }
 
+void remover_r(Lista* l, unsigned x) {
+    if (l == NULL || underflow(l)) {
+        return;
+    }
+    Noh* n = l->cabeca;
+    while (n != NULL) {
+        if (n->elemento.chave == x) {
+            if (n->anterior != NULL) {
+                n->anterior->proximo = n->proximo;
+            }
+            if (n->proximo != NULL) {
+                n->proximo->anterior = n->anterior;
+            }
+            free(n);
+            return;
+        }
+        n = n->proximo;
+    }
+}
+
 Reg* buscar(const Lista* l, unsigned x) {
     if (l == NULL || underflow(l)) {
         return NULL;
@@ -137,6 +157,18 @@ Reg* buscar(const Lista* l, unsigned x) {
         n = n->proximo;
     }
     return NULL;
+}
+
+size_t comprimento(const Lista* l) {
+    size_t total = 0;
+    if (l != NULL) {
+        Noh* n = l->cabeca;
+        while (n != NULL) {
+            ++total;
+            n = n->proximo;
+        }
+    }
+    return total;
 }
 
 void imprimir(const Lista* l) {
