@@ -11,18 +11,19 @@ int main(int argc, char* argv[]) {
     }
     srand(atoi(argv[2]));
 
-    size_t tamanho = atoi(argv[1]);
-    Hash* database = criar(tamanho);
+    size_t tamanho_tabela = atoi(argv[1]);
+    Hash* database = criar(tamanho_tabela);
 
     int i;
-    for (i = 0; i < tamanho / 2; ++i) { // ocupa metade da tabela
+    for (i = 0; i < tamanho_tabela / 2; ++i) { // ocupa metade da tabela
         Reg rasc = {
             .chave = rand() % 10000 + 1,
             .dado = i + 'a'
         };
         inserir(database, &rasc);
     }
-    puts("Tabela de hashing jah ocupada:");
+    printf("Tabela de hashing jah ocupada com %zu elementos:\n",
+           tamanho(database));
     imprimir(database);
 
     /*

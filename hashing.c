@@ -76,6 +76,7 @@ void inserir(Hash* h, const Reg* r) {
     }
     // Armazena o registro no indice correspondente do vetor
     memcpy(h->vetor + posicao, r, sizeof(Reg));
+    ++h->n; // contabiliza o numero de elementos armazenados
 }
 
 Reg* buscar(const Hash* h, unsigned chave) {
