@@ -2,13 +2,14 @@
 #include <stdio.h>
 #endif
 #include <stdlib.h>
+#include <string.h>
 #include "hashing.h"
 
 struct Hash {
     Reg* vetor; // alocado dinamicamente na criacao
     size_t m; // comprimento do vetor originalmente alocado
     size_t n; // numero de registros armazenados na tabela
-    unsigned M; // fator de divisao da funcao de hashing
+    unsigned M; // fator de ajuste para o tamanho na funcao de hashing
 };
 
 // Funcao auxiliar que calcula o maior numero primo maior que dado numero
@@ -48,8 +49,14 @@ void destruir(Hash* h) {
 // Funcao de hashing utilizada para calcular a posicao com base
 // no valor da chave
 static int hashing(const Hash* h, unsigned chave) {
+#if 0
     // Metodo da divisao
     int posicao = chave % h->M;
+#else
+    // Metodo pseudo-aleatorio
+    srand(chave); // chave eh a semente da sequencia pseudo-aleatoria
+    int posicao = rand() % h->M;
+#endif
     if (posicao >= h->m) { // se o resto eh maior que o ultimo indice...
         posicao -= h->m;
     }
@@ -62,6 +69,26 @@ static int hashing(const Hash* h, unsigned chave) {
 void inserir(Hash* h, const Reg* r) {
     // Calcula a posicao onde serah armazenado o novo registro
     int posicao = hashing(h, r->chave);
+
+    if (h->vetor[posicao].chave != 0) {
+        printf("*** COLISAO da chave %u com a sinonima %u! ***\n", r->chave,
+               h->vetor[posicao].chave);
+    }
+    // Armazena o registro no indice correspondente do vetor
+    memcpy(h->vetor + posicao, r, sizeof(Reg));
+}
+
+Reg* buscar(const Hash* h, unsigned chave) {
+    // Chama a mesma funcao que calculou a posicao de insercao
+    // dessa chave (se existe) na tabela
+    int posicao = hashing(h, chave);
+
+    // Nao eh necessario percorrer o vetor, vamos diretamente ao indice
+    // indicado pela funcao; porem, o registro pode nao estar (ainda) ali
+    if (h->vetor[posicao].chave == chave) {
+        return h->vetor + posicao; // retorna o endereco do registro existente
+    }
+    return NULL; // posicao nao contem a chave informada
 }
 
 size_t tamanho(const Hash* h) {

@@ -16,10 +16,8 @@ void destruir(Hash*);
 void inserir(Hash*, const Reg*);
 bool remover(Hash*, Reg*);
 size_t tamanho(const Hash*);
-Reg* buscar(Hash*, unsigned); // retorna o endereco do registro que possui chave
-#ifdef DEBUG
+Reg* buscar(const Hash*, unsigned); // retorna o endereco do registro que possui chave
 void imprimir(const Hash*);
-#endif
 
 #endif // HASHING_H_
 
