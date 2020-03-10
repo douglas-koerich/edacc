@@ -37,6 +37,7 @@ int main(void) {
         int num = pop(p);
         printf("%d ", num);
     }
+    putchar('\n');
 
     // Deve-se destruir a pilha antes de terminar o programa
     destroi(p);
