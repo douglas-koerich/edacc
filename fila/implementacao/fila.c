@@ -50,7 +50,8 @@ void insere(Fila* fila, int elemento) {
     } else {
         ++fila->fim;
     }
-    fila->vetor[fila->fim] = elemento;
+    fila->vetor[fila->fim] = elemento; // o indice 'fim' reflete a posicao da
+                                       // ultima insercao
 }
 
 int retira(Fila* fila) {
@@ -65,6 +66,7 @@ int retira(Fila* fila) {
     } else {
         ++fila->inicio;
     }
-    return fila->vetor[fila->inicio];
+    return fila->vetor[fila->inicio]; // o indice 'inicio' reflete a posicao da
+                                      // ultima remocao
 }
 
