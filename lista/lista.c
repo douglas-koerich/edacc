@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "lista.h"
 
 // Definicao interna de um tipo que armazena na memoria:
