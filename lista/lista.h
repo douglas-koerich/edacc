@@ -14,7 +14,7 @@ enum Posicao {
     ORDEM,  // usado pela insercao quando se deve adicionar em ordem
     VALOR   // usado pela remocao quando buscando um valor especifico
 };
-typedef enum Posicao;
+typedef enum Posicao Posicao;
 
 // Operacoes da interface do TAD
 Lista* cria(void); // nao eh necessario informar o tamanho
@@ -23,6 +23,8 @@ bool underflow(const Lista* lista); // banco de dados "vazio"
 void insere(Lista* lista, int elemento, Posicao onde);
 int retira(Lista* lista, Posicao onde, const int* valor); // ponteiro "valor"
     // eh usado somente quando "onde" contem VALOR
+bool busca(const Lista* lista, int chave); // chave existe ou nao na lista
+void imprime(const Lista* lista);
 
 #endif // LISTA_H
 
