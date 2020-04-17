@@ -32,6 +32,13 @@ unsigned fatorial(unsigned n) {
 /* A formula acima pode ser vista da seguinte maneira:
    n! = (n-1)!.n
    Por definicao: 0! = 1 <-- "condicao terminal da recursivade"
+
+   Definicao recursiva:
+        /
+	    | 1, se n = 0 ou n = 1
+   n! = <
+        | n.(n-1)!, caso contrario
+		\
    */
 unsigned fatorial(unsigned n) {
 	if (n == 0) {
