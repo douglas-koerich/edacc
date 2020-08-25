@@ -1,6 +1,7 @@
 #ifndef MATRIZ_H
 #define MATRIZ_H
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 // Definicao ABSTRATA do tipo "Matriz", cuja implementacao eh
