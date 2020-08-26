@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "stack.h"
 
 // Definicao concreta (implementacao) da estrutura Stack_
@@ -17,12 +18,40 @@ Stack* create(size_t max_elements) {
 }
 
 void destroy(Stack* stack) {
+    // Precisa liberar a copia das strings alocadas dinamicamente que ainda estiverem
+    // na pilha
+    int i;
+    for (i = 0; i <= stack->stack_top; ++i) {
+        free(stack->vector[i]); // libera a memoria alocada por strdup()
+    }
     free(stack->vector); // na ordem inversa do que foi criado
     free(stack);
 }
 
-bool push(Stack* stack, const char* element); // pilha de strings
-char* pop(Stack* stack); // deve chamar free() para a string retornada apos o uso
+bool push(Stack* stack, const char* element) {
+    if (stack->stack_top == stack->max_size - 1) { // vetor estah cheio?
+        return false;
+    }
+    char* copy = strdup(element); // duplicata alocada dinamicamente
+    /*
+    ++stack->stack_top; // avanca para a proxima posicao livre no vetor (novo topo)
+    stack->vector[stack->stack_top] = copy;
+    */
+    stack->vector[++stack->stack_top] = copy; // incrementa o indice antes de usar na expressao
+    return true;
+}
+
+char* pop(Stack* stack) {
+    if (underflow(stack)) { // se a pilha esta vazia...
+        return NULL; // ...nao existe elemento (string) a ser removido
+    }
+    /*
+    char* element = stack->vector[stack->stack_top];
+    --stack->stack_top;
+    return element;
+    */
+   return stack->vector[stack->stack_top--]; // decrementa o indice depois de recuperar o conteudo
+}
 
 const char* top(const Stack* stack) {
     if (underflow(stack)) {
