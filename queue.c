@@ -9,9 +9,6 @@ struct Queue_ {
         queue_rear;  // indice da posicao SEGUINTE ao elemento do fim da fila
 };
 
-#include <stdbool.h>
-#include <stdlib.h>
-
 Queue* create(size_t max_elements) {
     Queue* new_queue = malloc(sizeof(Queue));
     new_queue->max_size = max_elements;
