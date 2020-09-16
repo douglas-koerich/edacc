@@ -27,8 +27,9 @@ List* create(void);
 void destroy(List* list);
 void insert(List* list, const Record* new_element, Where to_where);
 Record* discard(List* list, Where from_where, int search_key); // usa 'search_key' se 'from_where'=KEY
+                                                               // quem recebe deve chamar free() para o ponteiro devolvido
 bool underflow(const List* list);
-Record* find(const List* list, int search_key);
+Record* find(const List* list, int search_key); 
 size_t size(const List* list);
 void print(const List* list); // vai imprimir apenas a chave de cada noh
 
