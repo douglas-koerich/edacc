@@ -1,5 +1,6 @@
-// Implementacao do TAD List usando a abordagem de encadeamento SIMPLES
-// (um link apenas do noh antecessor para o noh sucessor)
+// Implementacao do TAD List usando a abordagem de encadeamento CIRCULAR
+// (um link apenas do noh antecessor para o noh sucessor, a cauda tendo como
+// proximo noh a cabeca da lista - anel de nohs)
 
 #include <stdio.h>
 #include <string.h>
@@ -12,24 +13,17 @@ struct Node_ {
 typedef struct Node_ Node;
 
 struct List_ {
-    Node* head; // ponteiro de acesso externo
+    Node* tail; // ponteiro de acesso externo
 };
-
-/*
-OBS.: No livro do PEREIRA (e em outros tambem), o tipo List_ acima
-eh definido de outra forma, assim:
-typedef Node* List; // uma "lista" eh um ponteiro para um noh (o primeiro)
-*/
 
 List* create(void) {
     List* new_list = malloc(sizeof(List));
-    new_list->head = NULL; // a lista ainda estah vazia (nao existe um primeiro noh)
+    new_list->tail = NULL;
 
     return new_list;
 }
 
 void destroy(List* list) {
-    // Precisa remover todos os nohs alocados na memoria antes!...
     while (!underflow(list)) {
         int dummy_key = 0;
         discard(list, FRONT, dummy_key);
@@ -48,6 +42,7 @@ void insert(List* list, const Record* new_element, Where to_where) {
     }
 
     switch (to_where) {
+        // TODO:
         case FRONT: // no inicio
             new_node->next = list->head; // quem eh o primeiro atualmente (se existir), passa a ser
                                          // o proximo deste novo noh-cabeca da lista
@@ -84,6 +79,7 @@ Record* discard(List* list, Where from_where, int search_key) {
 
     switch (from_where) {
         case FRONT: {
+            // TODO: 
             Node* head = list->head;
             list->head = head->next;
             memcpy(record, &head->data, sizeof(Record));
@@ -92,6 +88,7 @@ Record* discard(List* list, Where from_where, int search_key) {
         }
 
         case REAR: {
+            // TODO:
             Node* previous = NULL;
             Node* node = list->head;
             while (node->next != NULL) {
@@ -123,41 +120,44 @@ Record* discard(List* list, Where from_where, int search_key) {
 }
 
 bool underflow(const List* list) {
-    /*
-    if (list->head == NULL) {
-        return true;
-    } else {
-        return false;
-    }
-    */
-    return list->head == NULL;
+    return list->tail == NULL;
 }
 
 Record* find(const List* list, int search_key) {
-    Node* node = list->head;
-    while (node != NULL) { // enquanto houver um noh para comparar...
+    if (underflow(list)) {
+        return NULL;
+    }
+    Node* node = list->tail;
+    do {
+        node = node->next;
         if (node->data.key == search_key) {
             return &node->data; // chave encontrada, devolve ponteiro pro seu registro
         }
-        node = node->next;
-    }
+    } while (node != list->tail);
+
     return NULL; // chave nao foi encontrada em nenhum noh
 }
 
 size_t size(const List* list) {
-    size_t counter = 0;
-    Node* node = list->head;
-    while (node != NULL) { // enquanto houver um noh para contar...
-        ++counter;
-        node = node->next;
+    if (underflow(list)) {
+        return 0;
     }
+    size_t counter = 0;
+    Node* node = list->tail;
+    do {
+        node = node->next;
+        ++counter;
+    } while (node != list->tail);
     return counter;
 }
 
 void print(const List* list) {
-    Node* node = list->head;
-    while (node != NULL) {
-        printf("%d@%p->", node->data.key, node);
-        node = node->next;
+    if (underflow(list)) {
+        return;
     }
+    Node* node = list->tail;
+    do {
+        node = node->next;
+        printf("%d@%p->", node->data.key, node);
+    } while (node != list->tail);
 }
