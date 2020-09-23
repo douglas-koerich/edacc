@@ -37,27 +37,23 @@ void insert(List* list, const Record* new_element, Where to_where) {
     memcpy(&new_node->data, new_element, sizeof(Record)); // copia de uma area de memoria para outra
 
     if (underflow(list)) { // se a lista estiver vazia...
-        // ... qualquer opcao de lugar significa inserir no inicio
-        to_where = FRONT;
+        new_node->next = new_node; // o novo noh (que serah unico) aponta pra si mesmo
+        list->tail = new_node;
+        return;
     }
 
     switch (to_where) {
-        // TODO:
         case FRONT: // no inicio
-            new_node->next = list->head; // quem eh o primeiro atualmente (se existir), passa a ser
-                                         // o proximo deste novo noh-cabeca da lista
-            list->head = new_node;
-            break;
-
         case REAR:  // no fim
-            new_node->next = NULL;
-            Node* node = list->head;
-            while (node->next != NULL) { // enquanto nao encontra o ultimo noh da lista...
-                // ... vai para o proximo
-                node = node->next;
+        { 
+            Node* tail = list->tail;
+            new_node->next = tail->next;
+            tail->next = new_node;
+            if (to_where == REAR) {
+                list->tail = new_node;
             }
-            node->next = new_node;
             break;
+        }
 
         case N_POS: // como N-esimo noh (ou como ultimo se a lista ainda nao tem N nohs)
             break;
@@ -79,30 +75,33 @@ Record* discard(List* list, Where from_where, int search_key) {
 
     switch (from_where) {
         case FRONT: {
-            // TODO: 
-            Node* head = list->head;
-            list->head = head->next;
+            Node* tail = list->tail;
+            Node* head = tail->next;
+            if (tail == head) {
+                list->tail = NULL;
+            } else {
+                tail->next = head->next;
+            }
             memcpy(record, &head->data, sizeof(Record));
             free(head);
             break;
         }
 
         case REAR: {
-            // TODO:
-            Node* previous = NULL;
-            Node* node = list->head;
-            while (node->next != NULL) {
-                previous = node; // mantem um ponteiro para este noh antes de ir para o proximo
+            Node* previous;
+            Node* node = list->tail;
+            do {
+                previous = node;
                 node = node->next;
+            } while (node != list->tail);
+            if (previous == node) { // penultimo eh o mesmo que o ultimo (lista tem apenas um noh)?
+                list->tail = NULL;
+            } else {
+                previous->next = node->next; // penultimo passa a apontar para o primeiro
+                list->tail = previous; // atualiza o ponto de entrada pelo ultimo noh da lista
             }
             memcpy(record, &node->data, sizeof(Record));
             free(node);
-            if (previous != NULL) {
-                previous->next = NULL; // marca o penultimo (anterior) como nova cauda da lista
-            } else {
-                // Se previous eh nulo, entao o noh que foi removido era o primeiro (e unico)
-                list->head = NULL; // lista voltou a ficar vazia
-            }
             break;
         }
 
