@@ -72,7 +72,6 @@ void insert(List* list, const Record* new_element, Where to_where) {
 
         default:    // operacao invalida para a insercao
             free(new_node); // desfaz a alocacao para o noh que nao vai ser mais inserido
-            return;
     }
 }
 
