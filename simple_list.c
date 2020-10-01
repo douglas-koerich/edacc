@@ -132,6 +132,7 @@ bool underflow(const List* list) {
     return list->head == NULL;
 }
 
+/*
 Record* find(const List* list, int search_key) {
     Node* node = list->head;
     while (node != NULL) { // enquanto houver um noh para comparar...
@@ -141,6 +142,21 @@ Record* find(const List* list, int search_key) {
         node = node->next;
     }
     return NULL; // chave nao foi encontrada em nenhum noh
+}
+*/
+
+static Record* recursive_find(Node* node, int search_key) {
+    if (node == NULL) { // 1a. condicao terminal
+        return NULL;
+    }
+    if (node->data.key == search_key) { // 2a. condicao terminal
+        return &node->data;
+    }
+    return recursive_find(node->next, search_key); // fase ativa da recursividade
+}
+
+Record* find(const List* list, int search_key) {
+    return recursive_find(list->head, search_key);
 }
 
 size_t size(const List* list) {
