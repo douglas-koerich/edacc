@@ -1,0 +1,100 @@
+algoritmo fatorial(n)
+	entrada número para calcular o seu fatorial (n!)
+	saída fatorial calculado
+	
+	   (M)  --------------------------------- 1
+	fat <- 1
+	       (M)  (R)   (M+A) ----------------- 1 + (n+1) + 2n
+	para i de 1 até n passo 1 faça
+	       (M)    (A)  ---------------------- 2n
+		fat <- fat * i
+	   (M)  --------------------------------- 1	   
+	retorna fat                               ===============
+											  T(n) = 5n + 4 (função de complexidade)
+											  O(n) (classe de complexidade - linear)
+											  
+algoritmo fatorial(n)
+	entrada número para calcular o seu fatorial (n!)
+	saída fatorial calculado
+
+        (R)  --------------------------------------- 1
+	se n = 0 então		; condição terminal
+	      (M)  ------------------------------------- 1 (apenas para n = 0)
+		retorna 1
+	senão				; fase ativa da recursão
+	       (M)  (A)         (A)  ------------------- 3 + T(n-1)
+		fat <- n * fatorial(n-1)
+		  (M)  ------------------------------------- 1
+		retorna fat                                  ============
+						EQUAÇÃO DE RECORRÊNCIA		 T(n) = T(n-1) + (1+3+1), se n > 0 (fase ativa)
+													 T(n) = 2, se n = 0 (condição terminal)
+		
+n! = 1       	, se n = 0
+     n.(n-1)!	, se n > 0
+	 
+Resolução da equação de recorrência LINEAR:
+  T(n) = T(n-1) + 5 (fórmula inicial da complexidade)
+       = T(n-2) + 5 + 5
+	   = T(n-3) + 5 + 5 + 5
+	   = ...
+	   = T(n-i) + i.5 (fórmula geral da complexidade)
+	   
+  Existe um valor de (n-i) para o qual T(n-i) não pode ser expandido:
+  n - i = 0 -> não expande, é igual a 2
+  Então, se n-i for feito igual a 0, i = n-1
+  
+  T(n) = T(n-i) + i.5
+       = T(n-n) + n.5
+	   = T(0) + 5n
+	   = 5n + 2 (função da complexidade do algoritmo recursivo)
+  O(n) -> complexidade linear
+  
+###################################################################################################
+
+algoritmo maxVetor(A, i, f)
+	entrada segmento do vetor A do índice i ao f
+	saída maior elemento do segmento
+	
+	    (R)   --------------------------------------------------------------------- 1
+	se i = f então		; segmento foi reduzido a uma unidade (posição) do vetor
+	      (M)    (D)  ------------------------------------------------------------- 2
+		retorna A[i]
+	senão
+	      (M)  (A)  (A)  ---------------------------------------------------------- 3
+		m <- (i + f) / 2
+		             (M)   T(?)  -------------------------------------------------- 1 + T(n/2) 
+		maiorInferior <- maxVetor(A, i, m)
+		             (M)   T(?)      (A)  ----------------------------------------- 2 + T(n/2)                          
+		maiorSuperior <- maxVetor(A, m+1, f)
+		                (R)  ------------------------------------------------------ 1
+		se maiorInferior > maiorSuperior então
+		      (M)  ---------------------------------------------------------------- 1
+			retorna maiorInferior
+		senão
+			retorna maiorSuperior -------X (mutuamente exclusivo com o outro "retorna")
+																					=====================
+																					T(n) = 3          , se n = 1
+																					T(n) = 2T(n/2) + 9, se n > 1
+																					
+Resolução da equação de recorrência GEOMÉTRICA:
+ T(n) = 2T(n/2) + 9		(fórmula inicial da complexidade)
+      = 2(2T(n/4) + 9) + 9
+	  = 2[2(2T(n/8) + 9) + 9] + 9
+	  = 2{2[2(2T(n/16) + 9) + 9] + 9} + 9
+	  = ...
+	  = 2^i[T(n/2^i)] + 9.[1 + 2 + 4 + 8 + ... + 2^(i-1)]  --> soma dos termos de uma PG
+	  
+	  a1 = 1
+	  q = 2
+	  n = i
+	  S = a1.(q^n - 1) / (q - 1) = 1.(2^i - 1) / (2 - 1) = 2^i - 1
+	  
+ T(n) = 2^i[T(n/2^i)] + 9(2^i - 1)
+      = 2^i[T(n/2^i)] + 9.2^i - 9 (fórmula geral da complexidade)
+	  
+Existe um valor de i para o qual n/2^i seja 1, tal que T(1) = 3 -> i = lg(n)
+Substituindo:
+ T(n) = 2^(lg n)[T(n/2^(lg n))] + 9.2^lg(n) - 9
+      = n.3 + 9.n - 9
+	  = 12n - 9  (função de complexidade resolvida)
+ O(n) --> complexidade linear
