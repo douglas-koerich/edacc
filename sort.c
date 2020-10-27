@@ -52,4 +52,5 @@ void insertion(Record* v, size_t n) {
         }
         memcpy(v + j + 1, r, sizeof(Record));
     }
+    free(r);
 }
