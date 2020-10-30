@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <limits.h>
+#include "queue_rec.h"
 #include "sort.h"
 
 static void swap(Record* r1, Record* r2) {
@@ -53,4 +56,64 @@ void insertion(Record* v, size_t n) {
         memcpy(v + j + 1, r, sizeof(Record));
     }
     free(r);
+}
+
+void shell(Record* v, size_t n) {
+    const size_t NUM_INCREMENTS = 32;
+    int increments[NUM_INCREMENTS], i, h;
+    for (i = 0, h = 1; i < NUM_INCREMENTS; ++i) {
+        increments[i] = h;
+        h = 3 * h + 1;
+        if (h > n) {
+            break;
+        }
+    }
+    Record* r = malloc(sizeof(Record));
+    while (--i >= 0) {
+        h = increments[i];
+        int s;
+        for (s = 0; s < h; ++s) {
+            int j;
+            for (j = s; j < n; j += h) {
+                memcpy(r, v + j, sizeof(Record));
+                int k;
+                for (k = j - h; k >= s && v[k].key > r->key; k -= h) {
+                    memcpy(v + k + h, v + k, sizeof(Record));
+                }
+                memcpy(v + k + h, r, sizeof(Record));
+            }
+        }
+    }
+    free(r);
+}
+
+void radix(Record* v, size_t n) {
+    const size_t NUM_QUEUES = 10;
+    Queue* queues[NUM_QUEUES];
+    int i;
+    for (i = 0; i < NUM_QUEUES; ++i) {
+        queues[i] = create(n);
+    }
+
+    const int MAX_DIGITS = log10(INT_MAX) + 1;
+    for (i = 1; i <= MAX_DIGITS; ++i) {
+        int j;
+        for (j = 0; j < n; ++j) {
+            int digit = (v[j].key / (int) pow(10, i - 1)) % 10;
+            enqueue(queues[digit], v + j);
+        }
+        int d;
+        for (d = j = 0; d < NUM_QUEUES; ++d) {
+            while (!underflow(queues[d])) {
+                Record* record = dequeue(queues[d]);
+                memcpy(v + j, record, sizeof(Record));
+                free(record);
+                ++j;
+            }
+        }
+    }
+
+    for (i = 0; i < NUM_QUEUES; ++i) {
+        destroy(queues[i]);
+    }
 }

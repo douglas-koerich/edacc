@@ -30,7 +30,9 @@ int main(int argc, char* argv[]) {
     // Ordenacao por um dos metodos/algoritmos
     // bubble(vetor, n);
     // selection(vetor, n);
-    insertion(vetor, n);
+    // insertion(vetor, n);
+    // shell(vetor, n);
+    radix(vetor, n);
 
     // Impressao do conjunto apos ordenacao
     puts("\nVetor ordenado:");
