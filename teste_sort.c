@@ -32,7 +32,9 @@ int main(int argc, char* argv[]) {
     // selection(vetor, n);
     // insertion(vetor, n);
     // shell(vetor, n);
-    radix(vetor, n);
+    // radix(vetor, n);
+    // merge(vetor, 0, n - 1);
+    quick(vetor, 0, n - 1);
 
     // Impressao do conjunto apos ordenacao
     puts("\nVetor ordenado:");

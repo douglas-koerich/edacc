@@ -117,3 +117,48 @@ void radix(Record* v, size_t n) {
         destroy(queues[i]);
     }
 }
+
+void merge(Record* v, int l, int u) {
+    if (l >= u) {
+        return;
+    }
+    int m = (l + u) / 2;
+    merge(v, l, m);
+    merge(v, m + 1, u);
+
+    size_t s = u - l + 1;
+    Record* w = malloc(sizeof(Record) * s);
+    int i = l, j = m + 1, k = 0;
+    while (i <= m && j <= u) {
+        if (v[i].key < v[j].key) {
+            memcpy(w + k++, v + i++, sizeof(Record));
+        } else {
+            memcpy(w + k++, v + j++, sizeof(Record));
+        }
+    }
+    while (i <= m) {
+        memcpy(w + k++, v + i++, sizeof(Record));
+    }
+    while (j <= u) {
+        memcpy(w + k++, v + j++, sizeof(Record));
+    }
+    memcpy(v + l, w, sizeof(Record) * s);
+    free(w);
+}
+
+void quick(Record* v, int l, int u) {
+    if (l > u) {
+        return;
+    }
+    int ref = v[(l + u) / 2].key;
+    int i = l, j = u;
+    while (i <= j) {
+        while (v[i].key < ref) ++i;
+        while (v[j].key > ref) --j;
+        if (i <= j) {
+            swap(v + i++, v + j--);
+        }
+    }
+    quick(v, l, j);
+    quick(v, i, u);
+}
