@@ -26,7 +26,7 @@ List* create(void) {
 void destroy(List* list) {
     while (!underflow(list)) {
         int dummy_key = 0;
-        discard(list, FRONT, dummy_key);
+        free(discard(list, FRONT, dummy_key));
     }
     free(list);
 }

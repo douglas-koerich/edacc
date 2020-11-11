@@ -32,7 +32,7 @@ void destroy(List* list) {
     // Precisa remover todos os nohs alocados na memoria antes!...
     while (!underflow(list)) {
         int dummy_key = 0;
-        discard(list, FRONT, dummy_key);
+        free(discard(list, FRONT, dummy_key));
     }
     free(list);
 }
