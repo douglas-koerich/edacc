@@ -3,7 +3,7 @@
 #include <time.h>
 #include "l5e1.h"
 
-#define NUM_ITENS 3
+#define NUM_ITENS 20
 
 int main(void) {
     srand((unsigned) time(NULL));

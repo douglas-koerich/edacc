@@ -83,7 +83,17 @@ void print(const List* list) {
 }
 
 static bool terminal(const Node* left, const Node* right) {
-    return left == NULL || right == NULL || left->previous == right || right->next == left;    
+    if (left == NULL || right == NULL) {
+        return true;
+    }
+    const Node* node = left;
+    while (node != NULL) {
+        node = node->previous;
+        if (node == right) {
+            return true;
+        }
+    }
+    return false;    
 }
 
 static void sort_r(Node* left, Node* right) {
