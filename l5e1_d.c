@@ -75,8 +75,8 @@ void print(const List* list) {
     Node* node = list->head;
     printf("(null)");
     while (node != NULL) {
-        printf("<-%d@%p->", node->data.key, node);
-        //printf("<-%d->", node->data.key);
+        //printf("<-%d@%p->", node->data.key, node);
+        printf("<-%d->", node->data.key);
         node = node->next;
     }
     printf("(null)");
