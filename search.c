@@ -89,3 +89,28 @@ algoritmo busca_binaria(v, l, r, k)
   T(n) = 11.lg(n) + 8
   O(lg(n)) -> logaritmica
 */
+
+int interpolation(const Record* v, int l, int r, int k) {
+    if (l > r) {
+        return -1;
+    }
+    /* Calculo de p considera a proporcionalidade entre as "distancias" entre chaves
+     * e entre indices:
+     * "A distancia de p para l (p - l) estah para a distancia entre k e a chave em l (dlk),
+     * "ASSIM COMO
+     * "a distancia de r para l (dlr) estah para a distancia entre a chave em r e a chave em l (dklkr)."
+     */
+    int p = l;
+    float dlr = r - l, dklkr = v[r].key - v[l].key, dlk = k - v[l].key;
+    if (dklkr > 0.0) { // as chaves nos extremos sao iguais (ou reduziu-se a um tamanho unitario)
+        p = dlk * dlr / dklkr + l; // aplicacao da solucao "regra de 3"
+    }
+    if (v[p].key == k) {
+        return p;
+    }
+    if (k < v[p].key) {
+        return interpolation(v, l, p - 1, k);
+    } else {
+        return interpolation(v, p + 1, r, k);
+    }
+}
