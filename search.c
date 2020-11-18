@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "search.h"
 
 /*
@@ -113,4 +115,65 @@ int interpolation(const Record* v, int l, int r, int k) {
     } else {
         return interpolation(v, p + 1, r, k);
     }
+}
+
+/******************************************************************************/
+/* IMPLEMENTACAO DO TAD "Dictionary" (TABELA DE DISPERSAO/ESPALHAMENTO)       */
+/******************************************************************************/
+
+struct Dictionary_ {
+    Record** vector; // vetor de ponteiros para os registros alocados dinamicamente
+    size_t size;
+};
+
+Dictionary* create(size_t max_elements) {
+    Dictionary* new_dict = malloc(sizeof(Dictionary));
+    new_dict->size = max_elements;
+    new_dict->vector = calloc(max_elements, sizeof(Record*)); // calloc() zera a memoria alocada
+    return new_dict;
+}
+
+void destroy(Dictionary* dictionary) {
+    int i;
+    for (i = 0; i < dictionary->size; ++i) {
+        free(dictionary->vector[i]); // se for NULL, nao acontece nada (v. man 3 free)
+    }
+    free(dictionary->vector);
+    free(dictionary);
+}
+
+static int hashing(int key, size_t size) {
+    int position;
+
+    /*
+    // Metodo da divisao
+    position = key % size;
+    */
+
+    // Metodo pseudo-aleatorio
+    srand(key); // usa a chave como semente
+    position = rand() % size;
+
+    return position;
+}
+
+void insert(Dictionary* dictionary, const Record* new_element) {
+    int index = hashing(new_element->key, dictionary->size);
+    dictionary->vector[index] = malloc(sizeof(Record));
+    memcpy(dictionary->vector[index], new_element, sizeof(Record));
+}
+
+Record* discard(Dictionary* dictionary, int search_key) {
+    int index = hashing(search_key, dictionary->size);
+    Record* record = dictionary->vector[index];
+    dictionary->vector[index] = NULL;
+    return record; // a funcao que recebe esse ponteiro (para o registro) deve chamar free()
+                   // ao nao precisar mais dele
+}
+
+Record* find(const Dictionary* dictionary, int search_key) {
+    int index = hashing(search_key, dictionary->size);
+    Record* duplicate = malloc(sizeof(Record));
+    memcpy(duplicate, dictionary->vector[index], sizeof(Record));
+    return duplicate; // a funcao que recebe esse ponteiro (para a duplicata) deve chamar free()
 }
