@@ -18,5 +18,6 @@ void destroy(Dictionary* dictionary);
 void insert(Dictionary* dictionary, const Record* new_element);
 Record* discard(Dictionary* dictionary, int search_key);
 Record* find(const Dictionary* dictionary, int search_key);
+void print(const Dictionary* dictionary);
 
 #endif // SEARCH_H

@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "search.h"
 
@@ -121,22 +123,143 @@ int interpolation(const Record* v, int l, int r, int k) {
 /* IMPLEMENTACAO DO TAD "Dictionary" (TABELA DE DISPERSAO/ESPALHAMENTO)       */
 /******************************************************************************/
 
+// Utiliza a estrategia de encadeamento exterior (com lista encadeada) para o
+// tratamento de colisao de chaves sinonimas
+struct Node_ {
+    Record data;
+    struct Node_* next;
+};
+typedef struct Node_ Node;
+
+struct List_ {
+    Node* head;
+};
+typedef struct List_ List;
+
+// Enumeracao das posicoes/dos modos de insercao e remocao na lista encadeada
+enum Where_ {
+    FRONT,  // na cabeca (inicio) da lista
+    REAR,   // na cauda (fim) da lista
+    KEY     // (apenas para remocao) operacao sobre um registro especificado pela chave
+};
+typedef enum Where_ Where;
+
 struct Dictionary_ {
-    Record** vector; // vetor de ponteiros para os registros alocados dinamicamente
+    List* vector; // vetor de listas encadeadas
     size_t size;
 };
+
+static bool underflow(const List* list) {
+    return list->head == NULL;
+}
+
+static void l_insert(List* list, const Record* new_element) {
+    Node* new_node = malloc(sizeof(Node));
+    memcpy(&new_node->data, new_element, sizeof(Record));
+
+    if (underflow(list)) {
+        new_node->next = list->head;
+        list->head = new_node;
+        return;
+    }
+    new_node->next = NULL;
+    Node* node = list->head;
+    while (node->next != NULL && node->data.key != new_element->key) {
+        node = node->next;
+    }
+    if (node->data.key == new_element->key) { // a chave jah existia na lista?
+        memcpy(&node->data, new_element, sizeof(Record));
+        free(new_node); // nao foi necessario criar um novo noh
+    } else {
+        node->next = new_node;
+    }
+}
+
+static Record* l_discard(List* list, Where from_where, int search_key) {
+    if (underflow(list)) {
+        return NULL;
+    }
+    Record* record = malloc(sizeof(Record));
+
+    switch (from_where) {
+        case FRONT: {
+            Node* head = list->head;
+            list->head = head->next;
+            memcpy(record, &head->data, sizeof(Record));
+            free(head);
+            break;
+        }
+
+        case KEY: {
+            Node* previous = NULL;
+            Node* node = list->head;
+            while (node != NULL && node->data.key != search_key) {
+                previous = node;
+                node = node->next;
+            }
+            if (node == NULL) {
+                return NULL;
+            }
+            memcpy(record, &node->data, sizeof(Record));
+            if (previous != NULL) {
+                previous->next = node->next;
+            } else {
+                list->head = node->next;
+            }
+            free(node);
+            break;
+        }
+
+        default:
+            free(record);
+            return NULL;
+    }
+    return record;
+}
+
+static Record* l_find(const List* list, int search_key) {
+    Node* node = list->head;
+    while (node != NULL) {
+        if (node->data.key == search_key) {
+            return &node->data;
+        }
+        node = node->next;
+    }
+    return NULL;
+}
+
+static size_t size(const List* list) {
+    size_t counter = 0;
+    Node* node = list->head;
+    while (node != NULL) {
+        ++counter;
+        node = node->next;
+    }
+    return counter;
+}
+
+static void l_print(const List* list) {
+    Node* node = list->head;
+    while (node != NULL) {
+        printf("%d,%c->", node->data.key, node->data.value);
+        node = node->next;
+    }
+}
 
 Dictionary* create(size_t max_elements) {
     Dictionary* new_dict = malloc(sizeof(Dictionary));
     new_dict->size = max_elements;
-    new_dict->vector = calloc(max_elements, sizeof(Record*)); // calloc() zera a memoria alocada
+    new_dict->vector = calloc(max_elements, sizeof(List)); // calloc() zera a memoria alocada
     return new_dict;
 }
 
 void destroy(Dictionary* dictionary) {
     int i;
     for (i = 0; i < dictionary->size; ++i) {
-        free(dictionary->vector[i]); // se for NULL, nao acontece nada (v. man 3 free)
+        while (!underflow(&dictionary->vector[i])) {
+            int dummy_key = 0;
+            free(l_discard(&dictionary->vector[i], FRONT, 0));
+        }
     }
     free(dictionary->vector);
     free(dictionary);
@@ -159,21 +282,27 @@ static int hashing(int key, size_t size) {
 
 void insert(Dictionary* dictionary, const Record* new_element) {
     int index = hashing(new_element->key, dictionary->size);
-    dictionary->vector[index] = malloc(sizeof(Record));
-    memcpy(dictionary->vector[index], new_element, sizeof(Record));
+    l_insert(&dictionary->vector[index], new_element);
 }
 
 Record* discard(Dictionary* dictionary, int search_key) {
     int index = hashing(search_key, dictionary->size);
-    Record* record = dictionary->vector[index];
-    dictionary->vector[index] = NULL;
-    return record; // a funcao que recebe esse ponteiro (para o registro) deve chamar free()
-                   // ao nao precisar mais dele
+    return l_discard(&dictionary->vector[index], KEY, search_key);
 }
 
 Record* find(const Dictionary* dictionary, int search_key) {
     int index = hashing(search_key, dictionary->size);
-    Record* duplicate = malloc(sizeof(Record));
-    memcpy(duplicate, dictionary->vector[index], sizeof(Record));
-    return duplicate; // a funcao que recebe esse ponteiro (para a duplicata) deve chamar free()
+    return l_find(&dictionary->vector[index], search_key);
+}
+
+void print(const Dictionary* dictionary) {
+    int i;
+    for (i = 0; i < dictionary->size; ++i) {
+        if (underflow(&dictionary->vector[i])) {
+            puts("(vazio)");
+        } else {
+            l_print(&dictionary->vector[i]);
+            putchar('\n');
+        }
+    }
 }
