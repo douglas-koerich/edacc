@@ -33,7 +33,7 @@ int main(void) {
     // Remove todos os elementos
     while (!underflow(uma_pilha)) {
         TipoElemento e = pop(uma_pilha);
-        printf("Removido elemento %x\n", e);
+        printf("Removido elemento %#x\n", e);
         print(uma_pilha);
     }
 
