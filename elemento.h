@@ -5,6 +5,6 @@
 /* No caso do uso da pilha para conversao da notacao INFIXA de expressoes para
 a forma POSFIXA, ela (a pilha) armazena o simbolo (caractere) do operador em
 questao */
-typedef char TipoElemento;
+typedef int TipoElemento;
 
 #endif // ELEMENTO_H
