@@ -16,14 +16,14 @@ void push(Pilha*, TipoElemento);
 TipoElemento pop(Pilha*);
 
 TipoElemento top(const Pilha*);
-size_t size(const Pilha*);
-bool underflow(const Pilha*); // retorna 'true' se pilha estiver vazia
+size_t p_size(const Pilha*);
+bool p_underflow(const Pilha*); // retorna 'true' se pilha estiver vazia
 
 // Operacoes associadas a qualquer TAD
-Pilha* create(void);
-void destroy(Pilha*);
+Pilha* p_create(void);
+void p_destroy(Pilha*);
 
 // Outras operacoes auxiliares
-void print(const Pilha*);
+void p_print(const Pilha*);
 
 #endif // PILHA_H

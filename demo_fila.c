@@ -7,10 +7,10 @@
 int main(void) {
     srand(1500);
 
-    Fila* exemplo = create();
+    Fila* exemplo = f_create();
 
     puts("Fila eh criada inicialmente vazia:");
-    print(exemplo);
+    f_print(exemplo);
 
     int i;
     for (i = 1; i <= 10; ++i) {
@@ -19,12 +19,12 @@ int main(void) {
     }
 
     puts("Fila apos o preenchimento inicial:");
-    print(exemplo);
+    f_print(exemplo);
 
     puts("<< Testes com a fila >>");
     printf("Elemento no inicio da fila: %d\n", front(exemplo));
     printf("Elemento no fim da fila: %d\n", rear(exemplo));
-    printf("Neste momento ha %zu elementos na fila\n", size(exemplo));
+    printf("Neste momento ha %zu elementos na fila\n", f_size(exemplo));
 
     int n;
     printf("Digite quantos elementos deseja remover: ");
@@ -36,10 +36,10 @@ int main(void) {
     }
 
     puts("Fila apos as remocoes:");
-    print(exemplo);
-    printf("(%zu elementos restantes)\n", size(exemplo));
+    f_print(exemplo);
+    printf("(%zu elementos restantes)\n", f_size(exemplo));
 
-    destroy(exemplo);
+    f_destroy(exemplo);
 
     return EXIT_SUCCESS;
 }

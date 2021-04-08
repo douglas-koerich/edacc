@@ -22,30 +22,31 @@ void enqueue(Fila* a_fila, TipoElemento novo_elemento) {
 }
 
 TipoElemento dequeue(Fila* a_fila) {
-    if (underflow(a_fila)) {
+    if (f_underflow(a_fila)) {
         puts("ERRO: fila vazia!");
-        destroy((Fila*) a_fila); // remove o modo constante do ponteiro
+        f_destroy((Fila*) a_fila); // remove o modo constante do ponteiro
         exit(EXIT_FAILURE);
     }
     TipoElemento e = a_fila->vetor[a_fila->inicio];
     if (++a_fila->inicio == TAM_MAX_FILA) {
         a_fila->inicio = 0;
     }
+    return e;
 }
 
 TipoElemento front(const Fila* a_fila) {
-    if (underflow(a_fila)) {
+    if (f_underflow(a_fila)) {
         puts("ERRO: fila vazia!");
-        destroy((Fila*) a_fila);
+        f_destroy((Fila*) a_fila);
         exit(EXIT_FAILURE);
     }
     return a_fila->vetor[a_fila->inicio];
 }
 
 TipoElemento rear(const Fila* a_fila) {
-    if (underflow(a_fila)) {
+    if (f_underflow(a_fila)) {
         puts("ERRO: fila vazia!");
-        destroy((Fila*) a_fila);
+        f_destroy((Fila*) a_fila);
         exit(EXIT_FAILURE);
     }
     int ultimo;
@@ -57,7 +58,7 @@ TipoElemento rear(const Fila* a_fila) {
     return a_fila->vetor[ultimo];
 }
 
-size_t size(const Fila* a_fila) {
+size_t f_size(const Fila* a_fila) {
     if (a_fila->fim >= a_fila->inicio) {
         return a_fila->fim - a_fila->inicio;
     } else {
@@ -65,11 +66,11 @@ size_t size(const Fila* a_fila) {
     }
 }
 
-bool underflow(const Fila* a_fila) {
+bool f_underflow(const Fila* a_fila) {
     return a_fila->inicio == a_fila->fim;
 }
 
-Fila* create(void) {
+Fila* f_create(void) {
     Fila* nova = malloc(sizeof(Fila));
     nova->vetor = malloc(sizeof(TipoElemento) * TAM_MAX_FILA);
     nova->inicio = 0; // primeira posicao a ser ocupada por uma insercao
@@ -77,13 +78,13 @@ Fila* create(void) {
     return nova;
 }
 
-void destroy(Fila* a_fila) {
+void f_destroy(Fila* a_fila) {
     free(a_fila->vetor); // agora eh preciso liberar tambem o vetor pois
                          // ele foi alocado dinamicamente
     free(a_fila);
 }
 
-void print(const Fila* a_fila) {
+void f_print(const Fila* a_fila) {
     printf("(INICIO) ");
     int pos = a_fila->inicio;
     while (pos != a_fila->fim) {

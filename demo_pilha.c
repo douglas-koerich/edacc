@@ -5,8 +5,8 @@
 #include "pilha.h"
 
 void consulta_pilha(const Pilha* p) {
-    print(p);
-    if (underflow(p) == true) {
+    p_print(p);
+    if (p_underflow(p) == true) {
         puts("Pilha vazia");
     } else {
         puts("Pilha nao-vazia");
@@ -15,7 +15,7 @@ void consulta_pilha(const Pilha* p) {
 
 int main(void) {
     // Demonstra o funcionamento da pilha
-    Pilha* uma_pilha = create();
+    Pilha* uma_pilha = p_create();
 
     // Testa e imprime o conteudo da pilha (ainda vazia)
     consulta_pilha(uma_pilha);
@@ -31,13 +31,13 @@ int main(void) {
     consulta_pilha(uma_pilha);
 
     // Remove todos os elementos
-    while (!underflow(uma_pilha)) {
+    while (!p_underflow(uma_pilha)) {
         TipoElemento e = pop(uma_pilha);
         printf("Removido elemento %#x\n", e);
-        print(uma_pilha);
+        p_print(uma_pilha);
     }
 
-    destroy(uma_pilha);
+    p_destroy(uma_pilha);
 
     return EXIT_SUCCESS;
 }

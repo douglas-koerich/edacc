@@ -24,9 +24,9 @@ void push(Pilha* a_pilha, TipoElemento novo_elemento) {
 }
 
 TipoElemento pop(Pilha* a_pilha) {
-    if (underflow(a_pilha)) {
+    if (p_underflow(a_pilha)) {
         puts("ERRO: pilha vazia!");
-        destroy(a_pilha);
+        p_destroy(a_pilha);
         exit(EXIT_FAILURE);
     }
     /*
@@ -38,34 +38,34 @@ TipoElemento pop(Pilha* a_pilha) {
 }
 
 TipoElemento top(const Pilha* a_pilha) {
-    if (underflow(a_pilha)) {
+    if (p_underflow(a_pilha)) {
         puts("ERRO: pilha vazia!");
-        destroy((Pilha*) a_pilha); // remove o modo constante do ponteiro
+        p_destroy((Pilha*) a_pilha); // remove o modo constante do ponteiro
         exit(EXIT_FAILURE);
     }
     return a_pilha->vetor[a_pilha->topo];
 }
 
-size_t size(const Pilha* a_pilha) {
+size_t p_size(const Pilha* a_pilha) {
     return a_pilha->topo + 1;
 }
 
-bool underflow(const Pilha* a_pilha) {
+bool p_underflow(const Pilha* a_pilha) {
     return a_pilha->topo == -1;
 }
 
-Pilha* create(void) {
+Pilha* p_create(void) {
     Pilha* nova = malloc(sizeof(Pilha));
     nova->topo = -1; // indice invalido, nenhum elemento estah no topo
     return nova;
 }
 
-void destroy(Pilha* a_pilha) {
+void p_destroy(Pilha* a_pilha) {
     free(a_pilha);
 }
 
 // Outras operacoes auxiliares
-void print(const Pilha* a_pilha) {
+void p_print(const Pilha* a_pilha) {
     puts("(TOPO)");
     int i = a_pilha->topo;
     while (i >= 0) {

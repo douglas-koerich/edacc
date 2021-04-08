@@ -12,11 +12,11 @@ void enqueue(Fila*, TipoElemento);
 TipoElemento dequeue(Fila*);
 TipoElemento front(const Fila*);
 TipoElemento rear(const Fila*);
-size_t size(const Fila*);
-bool underflow(const Fila*);
+size_t f_size(const Fila*);
+bool f_underflow(const Fila*);
 
-Fila* create(void);
-void destroy(Fila*);
-void print(const Fila*);
+Fila* f_create(void);
+void f_destroy(Fila*);
+void f_print(const Fila*);
 
 #endif // FILA_H
