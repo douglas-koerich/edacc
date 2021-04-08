@@ -9,13 +9,34 @@ struct fila {
                      // dentro do vetor
 };
 
-void enqueue(Fila*, TipoElemento);
-TipoElemento dequeue(Fila*);
+void enqueue(Fila* a_fila, TipoElemento novo_elemento) {
+    if (a_fila->inicio == 0 && a_fila->fim == TAM_MAX_FILA - 1 ||
+        a_fila->fim == a_fila->inicio - 1) {
+        puts("ERRO: fila cheia!");
+        return;
+    }
+    a_fila->vetor[a_fila->fim] = novo_elemento;
+    if (++a_fila->fim == TAM_MAX_FILA) {
+        a_fila->fim = 0;
+    }
+}
+
+TipoElemento dequeue(Fila* a_fila) {
+    if (underflow(a_fila)) {
+        puts("ERRO: fila vazia!");
+        destroy((Fila*) a_fila); // remove o modo constante do ponteiro
+        exit(EXIT_FAILURE);
+    }
+    TipoElemento e = a_fila->vetor[a_fila->inicio];
+    if (++a_fila->inicio == TAM_MAX_FILA) {
+        a_fila->inicio = 0;
+    }
+}
 
 TipoElemento front(const Fila* a_fila) {
     if (underflow(a_fila)) {
         puts("ERRO: fila vazia!");
-        destroy((Fila*) a_fila); // remove o modo constante do ponteiro
+        destroy((Fila*) a_fila);
         exit(EXIT_FAILURE);
     }
     return a_fila->vetor[a_fila->inicio];
@@ -24,7 +45,7 @@ TipoElemento front(const Fila* a_fila) {
 TipoElemento rear(const Fila* a_fila) {
     if (underflow(a_fila)) {
         puts("ERRO: fila vazia!");
-        destroy((Fila*) a_fila); // remove o modo constante do ponteiro
+        destroy((Fila*) a_fila);
         exit(EXIT_FAILURE);
     }
     int ultimo;
@@ -45,7 +66,7 @@ size_t size(const Fila* a_fila) {
 }
 
 bool underflow(const Fila* a_fila) {
-    a_fila->inicio == a_fila->fim;
+    return a_fila->inicio == a_fila->fim;
 }
 
 Fila* create(void) {
@@ -66,7 +87,7 @@ void print(const Fila* a_fila) {
     printf("(INICIO) ");
     int pos = a_fila->inicio;
     while (pos != a_fila->fim) {
-        printf("%#x ", a_fila->vetor[pos++]);
+        printf("%d ", a_fila->vetor[pos++]);
         if (pos == TAM_MAX_FILA) {
             pos = 0;
         }
