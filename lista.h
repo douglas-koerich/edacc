@@ -26,11 +26,11 @@ size_t size(const Lista*);
 void print(const Lista*);
 
 // A insercao pode ser feita de maneiras diferentes (livres)
-void insert(Lista*, const Registro*, Criterio);
+void insert(Lista*, const Registro*, Criterio, unsigned);
 
 // Idem para remocao (retorno vem pelo parametro-ponteiro para Registro)
 // No caso de remocao por valor, a chave vai dentro do parametro Registro
-void extract(Lista*, Registro*, Criterio);
+void extract(Lista*, Registro*, Criterio, unsigned);
 
 // Pesquisa por valor de chave (int) especifico, preenchendo o registro
 // se encontrado (indicado pelo retorno V/F)
