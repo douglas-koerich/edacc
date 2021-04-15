@@ -18,7 +18,7 @@ int main(void) {
         } else {
             cri = CAUDA;
         }
-        insert(lst, &reg, cri);
+        insert(lst, &reg, cri, 0); // 0 = posicao ORDINAL nao interessa
     }
 
     print(lst);
@@ -30,7 +30,7 @@ int main(void) {
     Registro aux;
     if (search(lst, chave_usuario, &aux)) {
         printf("O valor associado eh a letra %c\n", aux.valor);
-        extract(lst, &aux, VALOR);
+        extract(lst, &aux, VALOR, 0); // 0 = sem posicao ORDINAL
     } else {
         puts("Chave nao encontrada na lista");
     }
