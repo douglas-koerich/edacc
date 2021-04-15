@@ -8,10 +8,10 @@
 struct fila;
 typedef struct fila Fila;
 
-void enqueue(Fila*, TipoElemento);
-TipoElemento dequeue(Fila*);
-TipoElemento front(const Fila*);
-TipoElemento rear(const Fila*);
+void f_enqueue(Fila*, TipoElemento);
+TipoElemento f_dequeue(Fila*);
+TipoElemento f_front(const Fila*);
+TipoElemento f_rear(const Fila*);
 size_t f_size(const Fila*);
 bool f_underflow(const Fila*);
 
