@@ -22,6 +22,7 @@ int main(void) {
     }
 
     print(lst);
+    putchar('\n');
 
     int chave_usuario;
     printf("Digite uma chave de busca na lista: ");
@@ -36,6 +37,7 @@ int main(void) {
     }
 
     print(lst);
+    putchar('\n');
 
     destroy(lst);
 
