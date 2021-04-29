@@ -24,6 +24,7 @@ void destroy(Lista*);
 bool underflow(const Lista*);
 size_t size(const Lista*);
 void print(const Lista*);
+void rprint(const Lista*); // impressao no sentido reverso (a partir da cauda)
 
 // A insercao pode ser feita de maneiras diferentes (livres)
 void insert(Lista*, const Registro*, Criterio, unsigned);

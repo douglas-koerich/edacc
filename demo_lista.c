@@ -24,6 +24,9 @@ int main(void) {
     print(lst);
     putchar('\n');
 
+    rprint(lst);
+    putchar('\n');
+
     int chave_usuario;
     printf("Digite uma chave de busca na lista: ");
     scanf("%d", &chave_usuario);

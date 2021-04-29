@@ -2,29 +2,24 @@
 #include "lista.h"
 
 struct noh {
-    Registro dado;          // elemento armazenado neste noh da lista
-    struct noh* proximo;    // referencia/ligacao com o noh seguinte
+    Registro dado;
+    struct noh* proximo;
+    struct noh* anterior;   // referencia/ligacao com o noh anterior
 };
 typedef struct noh Noh;
 
 struct lista {
-    Noh* cabeca;     // ponteiro para o primeiro noh da lista ("acesso externo")
-    size_t contador; // numero de nohs da lista no momento
+    Noh* cabeca;
+    Noh* cauda; // ponteiro adicional para acesso externo ao ultimo noh
+    size_t contador;
 };
 
 Lista* create(void) {
-    /*
-    Lista* nova = malloc(sizeof(Lista));
-    nova->cabeca = NULL; // lista nao possui um primeiro noh (vazia)
-    nova->contador = 0;
-    */
     Lista* nova = calloc(1, sizeof(Lista));
     return nova;
 }
 
 void destroy(Lista* a_lista) {
-    // Antes de apagar a estrutura (struct lista) que faz referencia aos
-    // nohs da lista, preciso apagar esses nohs da memoria!
     while (!underflow(a_lista)) {
         Registro nao_usado;
         extract(a_lista, &nao_usado, CABECA, 0);
@@ -44,7 +39,6 @@ void print(const Lista* a_lista) {
     Noh* noh = a_lista->cabeca;
     printf("(INICIO) ");
     while (noh != NULL) {
-        // Noh eh valido, imprime-o...
         printf("{%d,%c} ", noh->dado.chave, noh->dado.valor);
         noh = noh->proximo;
     }
@@ -52,7 +46,13 @@ void print(const Lista* a_lista) {
 }
 
 void rprint(const Lista* a_lista) {
-    puts("Operacao NAO SUPORTADA em lista simples");
+    Noh* noh = a_lista->cauda;
+    printf("(FIM) ");
+    while (noh != NULL) {
+        printf("{%d,%c} ", noh->dado.chave, noh->dado.valor);
+        noh = noh->anterior;
+    }
+    printf("(INICIO)");
 }
 
 void insert(Lista* a_lista, const Registro* novo_elemento, Criterio forma,
@@ -60,57 +60,79 @@ void insert(Lista* a_lista, const Registro* novo_elemento, Criterio forma,
     Noh* novo_noh = malloc(sizeof(Noh));
     novo_noh->dado = *novo_elemento;
 
-    if (underflow(a_lista)) { // se a lista ainda estiver vazia...
-        forma = CABECA; // ... vamos inserir usando o criterio mais "facil"
+    if (underflow(a_lista)) {
+        forma = CABECA;
     }
     Noh* noh = a_lista->cabeca;
     switch (forma) {
-        case CABECA:    // novo elemento no inicio
+        case CABECA:
             novo_noh->proximo = a_lista->cabeca;
             a_lista->cabeca = novo_noh;
+
+            // Novos passos para a lista duplamente encadeada
+            novo_noh->anterior = NULL;
+            if (novo_noh->proximo != NULL) { // a lista nao estava vazia?
+                // Vai ao noh seguinte (novo_noh->proximo), que era a cabeca,
+                // e muda o seu ponteiro anterior para a nova cabeca
+                novo_noh->proximo->anterior = novo_noh;
+            } else {
+                a_lista->cauda = novo_noh; // novo_noh eh unico, entao eh
+                                           // cabeca E cauda da lista
+            }
             break;
 
-        case CAUDA: {   // novo elemento no fim da lista
-            while (noh->proximo != NULL) { // enquanto nao for o ultimo...
-                // ... vai para o proximo
-                noh = noh->proximo;
-            }
-            noh->proximo = novo_noh;
+        case CAUDA: {
+            // Nao eh preciso testar se a_lista->cauda eh NULL porque se
+            // fosse a lista estaria vazia, e pelo teste de underflow acima
+            // o criterio de insercao seria mudado para CABECA...
             novo_noh->proximo = NULL;          
+
+            novo_noh->anterior = a_lista->cauda;
+            a_lista->cauda = novo_noh;
+
+            // Vai ao noh anterior (novo_noh->anterior), que era a cauda,
+            // e muda o seu ponteiro proximo para a nova cauda
+            novo_noh->anterior->proximo = novo_noh;
             break;
         }
 
-        case CRESCENTE: { // novo elemento em ordem crescente relativo aos
-                          // vizinhos
-            Noh* anterior = NULL; // (sobre o uso deste ponteiro, veja a
-                                  // remocao da CAUDA abaixo...)
-            while (noh != NULL // Enquanto nao passo do fim da lista...
-                   // ... E o noh da vez tem um valor menor que o novo
+        case CRESCENTE: {
+            while (noh != NULL
                    && noh->dado.chave < novo_noh->dado.chave) {
-                // ... procuro o ponto de insercao no proximo noh
-                anterior = noh;
                 noh = noh->proximo;
             }
             novo_noh->proximo = noh;
-            if (anterior != NULL) {
-                anterior->proximo = novo_noh;
+            if (noh == NULL) {
+                novo_noh->anterior = a_lista->cauda;
+                a_lista->cauda = novo_noh;
             } else {
-                a_lista->cabeca = novo_noh;
+                if (noh->anterior != NULL) {
+                    noh->anterior->proximo = novo_noh;
+                } else {
+                    a_lista->cabeca = novo_noh;
+                }
+                novo_noh->anterior = noh->anterior;
+                noh->anterior = novo_noh;
             }
             break;
         }
-        case DECRESCENTE: { // idem, em ordem decrescente
-            Noh* anterior = NULL;
+        case DECRESCENTE: {
             while (noh != NULL
                    && noh->dado.chave > novo_noh->dado.chave) {
-                anterior = noh;
                 noh = noh->proximo;
             }
             novo_noh->proximo = noh;
-            if (anterior != NULL) {
-                anterior->proximo = novo_noh;
+            if (noh == NULL) {
+                novo_noh->anterior = a_lista->cauda;
+                a_lista->cauda = novo_noh;
             } else {
-                a_lista->cabeca = novo_noh;
+                if (noh->anterior != NULL) {
+                    noh->anterior->proximo = novo_noh;
+                } else {
+                    a_lista->cabeca = novo_noh;
+                }
+                novo_noh->anterior = noh->anterior;
+                noh->anterior = novo_noh;
             }
             break;
         }
@@ -139,28 +161,26 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
     }
     Noh* noh = a_lista->cabeca;
     switch (forma) {
-        case CABECA:    // remove do inicio
+        case CABECA:
             a_lista->cabeca = noh->proximo;
             *removido = noh->dado;
+            if (noh->proximo != NULL) {
+                noh->proximo->anterior = NULL;
+            } else {
+                // Noh sendo removido era o unico, entao a referencia de cauda
+                // tambem precisa ser anulada
+                a_lista->cauda = NULL;
+            }
             free(noh);
             break;
 
-        case CAUDA: {   // remove do fim da lista
-            Noh* anterior = NULL;
-            while (noh->proximo != NULL) { // como na insercao...
-                anterior = noh; // ("lembra" quem eh o noh anterior
-                                //  antes de avancar)
-                // ... procura o ultimo noh (cauda) da lista
-                noh = noh->proximo;
-            }
+        case CAUDA: {
+            noh = a_lista->cauda;
+            a_lista->cauda = noh->anterior;
             *removido = noh->dado;
-            if (anterior != NULL) {
-                // Ok, existe um noh anterior e ele passa a ser a
-                // cauda da lista
-                anterior->proximo = NULL;
+            if (noh->anterior != NULL) {
+                noh->anterior->proximo = NULL;
             } else {
-                // A cauda da lista eh o UNICO noh da mesma, entao
-                // remove-lo deve tornar a lista vazia novamente
                 a_lista->cabeca = NULL;
             }
             free(noh);
@@ -169,27 +189,28 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
         case ORDINAL:   // remove o primeiro, segundo, ..., n-esimo noh
             break;
 
-        case VALOR: {   // remove baseado na chave
-            Noh* anterior = NULL;
+        case VALOR: {
             while (noh != NULL) {
                 if (noh->dado.chave == removido->chave) {
                     *removido = noh->dado;
-                    if (anterior != NULL) {
-                        anterior->proximo = noh->proximo;
+                    if (noh->anterior != NULL) {
+                        noh->anterior->proximo = noh->proximo;
                     } else {
                         a_lista->cabeca = noh->proximo;
+                    }
+                    if (noh->proximo != NULL) {
+                        noh->proximo->anterior = noh->anterior;
+                    } else {
+                        a_lista->cauda = noh->anterior;
                     }
                     free(noh);
 
                     --a_lista->contador;
-                    break; // jah encontrou e removeu
+                    break;
                 }
-                anterior = noh;
                 noh = noh->proximo;
             }
-            // Se chegou neste ponto eh porque a chave nao foi encontrada
-            // para ser removida, ou se encontrada jah foi removida
-            return; // para nao decrementar o contador novamente
+            return;
         }
         default:
             puts("ERRO: criterio de remocao INVALIDO!");
@@ -203,11 +224,10 @@ bool search(const Lista* a_lista, int chave_x, Registro* p_reg) {
     Noh* noh = a_lista->cabeca;
     while (noh != NULL) {
         if (noh->dado.chave == chave_x) {
-            *p_reg = noh->dado; // copia todo o registro para o endereco
-                                // (no ponteiro) passado pra funcao 
+            *p_reg = noh->dado;
             return true;
         }
         noh = noh->proximo;
     }
-    return false; // chave_x nao foi encontrada
+    return false;
 }
