@@ -37,4 +37,7 @@ void extract(Lista*, Registro*, Criterio, unsigned);
 // se encontrado (indicado pelo retorno V/F)
 bool search(const Lista*, int, Registro*);
 
+// Exercicio 2 da lista proposta
+bool compare(const Lista*, const Lista*);
+
 #endif

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h> // para usar memcmp() em compare()
 #include "lista.h"
 
 struct noh {
@@ -210,4 +211,20 @@ bool search(const Lista* a_lista, int chave_x, Registro* p_reg) {
         noh = noh->proximo;
     }
     return false; // chave_x nao foi encontrada
+}
+
+bool compare(const Lista* lista_1, const Lista* lista_2) {
+    Noh* noh1 = lista_1->cabeca,
+       * noh2 = lista_2->cabeca;
+    while (noh1 != NULL && noh2 != NULL) {
+        // Comparacao entre nohs eh possivel
+        if (memcmp(&noh1->dado, &noh2->dado, sizeof(Registro)) != 0) {
+            return false; // conteudos sao diferentes!
+        }
+        noh1 = noh1->proximo; // avanca pelas duas listas simultaneamente
+        noh2 = noh2->proximo;
+    }
+    // Espera-se que tenhamos chegado ao fim de ambas as listas ao mesmo tempo
+    // (se uma for mais longa que a outra entao sao diferentes)
+    return noh1 == NULL && noh2 == NULL;
 }
