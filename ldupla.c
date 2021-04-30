@@ -143,8 +143,6 @@ void insert(Lista* a_lista, const Registro* novo_elemento, Criterio forma,
             puts("ERRO: criterio de insercao INVALIDO!");
             destroy(a_lista);
 
-            // Nao esquecer de apagar tambem o noh que foi recem-criado
-            // nesta mesma funcao
             free(novo_noh);
 
             exit(EXIT_FAILURE);
