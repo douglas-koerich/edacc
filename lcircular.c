@@ -163,7 +163,6 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
             do {
                 anterior = anterior->proximo;
             } while (anterior->proximo != a_lista->cauda);
-            *removido = noh->dado;
             if (anterior == a_lista->cauda) {
                 // A cauda e seu noh anterior sao o mesmo (e unico) noh da lista
                 a_lista->cauda = NULL;
@@ -171,6 +170,7 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
                 anterior->proximo = a_lista->cauda->proximo;
                 a_lista->cauda = anterior;
             }
+            *removido = noh->dado;
             free(noh);
             break;
 
@@ -182,11 +182,11 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
                 anterior = noh;
                 noh = noh->proximo;
                 if (noh->dado.chave == removido->chave) {
-                    *removido = noh->dado;
                     anterior->proximo = noh->proximo;
                     if (noh == a_lista->cauda) {
                         a_lista->cauda = anterior;
                     }
+                    *removido = noh->dado;
                     free(noh);
 
                     --a_lista->contador;
