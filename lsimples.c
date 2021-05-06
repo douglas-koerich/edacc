@@ -52,8 +52,19 @@ void print(const Lista* a_lista) {
     printf("(FIM)");
 }
 
+static void print_noh(const Noh* um_noh) {
+    if (um_noh == NULL) {   // condicao terminal
+        return;             // solucao trivial (faz nada)
+    } else {    // fase ativa
+        print_noh(um_noh->proximo); // chamada recursiva
+        printf("{%d,%c} ", um_noh->dado.chave, um_noh->dado.valor);
+    }
+}
+
 void rprint(const Lista* a_lista) {
-    puts("Operacao NAO SUPORTADA em lista simples");
+    printf("(FIM) ");
+    print_noh(a_lista->cabeca);
+    printf("(INICIO)");
 }
 
 void insert(Lista* a_lista, const Registro* novo_elemento, Criterio forma,
