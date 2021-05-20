@@ -1,0 +1,22 @@
+     (M)-------------------------------> 1
+for (i=0; (R+A)------------------------> 2(n-1 + 1) = 2n
+          i<n-1;(M+A)------------------> 2(n-1) = 2n - 1
+		         ++i) {
+		 (M+A)-------------------------> 2(n-1) = 2n - 1 ; inicializado todas as n-1 repeticoes do externo
+										  As (n-1) vezes que o for interno for executado pelo externo
+										   |   As (n-2 + 1) vezes que a comparacao for feita nesse for
+										   |    |
+										   V    V
+    for (j=i+1; (R)--------------------> (n-1)(n-1) = (n-1)² = n² - 2n + 1
+	            j<n; (M+A)-------------> 2(n-1)(n-2)
+				     ++j) {
+           (M) (D)(D)------------------> 3(n-1)(n-2)
+		tmp = a[i][j];
+         (D)(D)(M) (D)(D)--------------> 5(n-1)(n-2)
+		a[i][j] = a[j][i];
+         (D)(D)(M)---------------------> 3(n-1)(n-2) = 13(n-1)(n-2) = 13n² - 27n + 2
+		a[j][i] = tmp;
+	}
+}
+
+T(n) = 14n² - 23n + 2
