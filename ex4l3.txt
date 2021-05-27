@@ -1,0 +1,24 @@
+Ta(n) = n² - n + 549
+Complexidade do algoritmo A: O(n²)
+
+Tb(n) = 49n + 49
+Complexidade do algoritmo B: O(n)
+
+Ta(n) < Tb(n)
+n² - n + 549 < 49n + 49
+n² - 50n + 500 < 0
+
+Por Bhaskara:
+a = 1
+b = -50
+c = 500
+
+delta = sqrt((-50)² - 4.1.500) = 22,36
+x1 = (-(-50) + 22) / (2.1) = 36
+x2 = (-(-50) - 22) / (2.1) = 14
+
+Entre n = 14 e n = 36, o algoritmo A vai ser mais rapido que o algoritmo Bhaskara
+
+Ex. 1: n = 10; Ta(n) = 639, Tb(n) = 539
+Ex. 2: n = 50; Ta(n) = 2999, Tb(n) = 2499
+Ex. 3: n = 20; Ta(n) = 929, Tb(n) = 1029

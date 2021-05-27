@@ -1,0 +1,18 @@
+T(n) = 1         , se n = 1
+       T(n/2) + 1, se n > 1
+
+T(n) = T(n/2) + 1
+     = (T(n/4) + 1) + 1
+     = ((T(n/8) + 1) + 1) + 1
+     = T(n/(2^k)) + (1 + 1 + 1 + ...)
+                    /----k vezes----/
+T(n) = T(n/(2^k)) + k <-- expressao geral (recorrencia geometrica)
+
+Para fazer T(n/(2^k)) = T(1) = 1, precisamos descobrir o valor de k
+onde n/(2^k) = 1 -> 2^k = n -> k = lg(n)
+
+T(n) = T(n/(2^lg(n)) + lg(n)
+     = T(1) + lg(n)
+T(n) = lg(n) + 1 <-- expressao geral FINAL sem recorrencia
+
+Complexidade O(lg(n))
