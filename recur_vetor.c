@@ -53,3 +53,28 @@ int maior(const int* v, size_t n) {
         }
     }
 }
+
+/*
+v
+                                            v
++---+---+---+---+---+---+---+---+---+---+---+---+
+| 5 | 2 | 1 | 4 | 9 | 5 | 8 | 0 | 3 | 6 | 2 | 7 |
++---+---+---+---+---+---+---+---+---+---+---+---+
+                                            /-1-/
+/---------------------- n ----------------------/
+*/
+
+int maior2(const int* v, int i, int s) {
+    if (i == s) {       // condicao terminal
+        return v[i];    // solucao trivial
+    } else { // fase ativa da recursividade
+        int m = (i + s) / 2; // calcula indice no meio entre i e s
+        int maior_i = maior2(v, i, m); // 1a. chamada recursiva
+        int maior_s = maior2(v, m+1, s); // 2a. chamada recursiva
+        if (maior_i > maior_s) {
+            return maior_i;
+        } else {
+            return maior_s;
+        }
+    }
+}
