@@ -17,10 +17,10 @@ void algoritmo_ordenacao(Registro* v, size_t n) {
     // Algoritmos complexos
     // bubble(v, n);
     // selection(v, n);
-    insertion(v, n);
+    // insertion(v, n);
 
     // Algoritmos melhorados ou especificos
-    // shellsort(v, n);
+    shellsort(v, n);
     // radixsort(v, n);
 
     // Algoritmos eficientes
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     srand(20210609);
     int i;
     for (i = 0; i < tamanho_vetor; ++i) {
-        vetor[i].chave = rand() % 99 + 1; // faixa de 1 a 99
+        vetor[i].chave = rand() % 9999 + 1; // faixa de 1 a 9999
         vetor[i].valor = rand() % 26 + 'A'; // faixa de 'A' a 'Z'
     }
     puts("ANTES:");
