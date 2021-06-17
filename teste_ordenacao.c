@@ -20,11 +20,11 @@ void algoritmo_ordenacao(Registro* v, size_t n) {
     // insertion(v, n);
 
     // Algoritmos melhorados ou especificos
-    shellsort(v, n);
+    // shellsort(v, n);
     // radixsort(v, n);
 
     // Algoritmos eficientes
-    // mergesort(v, 0, n-1);
+    mergesort(v, 0, n-1);
     // quicksort(v, 0, n-1);
 }
 

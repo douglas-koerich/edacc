@@ -1,4 +1,5 @@
 #include "ordenacao.h"
+#include "fila_registros.h"
 
 void shellsort(Registro* vetor, size_t n) {
     // Geracao da serie de incrementos
@@ -32,5 +33,41 @@ void shellsort(Registro* vetor, size_t n) {
 }
 
 void radixsort(Registro* vetor, size_t n) {
-    
+    // Cria as 10 filas correspondentes aos 10 simbolos (algarismos)
+    // que compoem a chave numerica
+    const size_t NUM_SIMBOLOS = 10;
+    int i;
+    Fila* filas[NUM_SIMBOLOS];
+    for (i = 0; i < NUM_SIMBOLOS; ++i) {
+        filas[i] = f_create();
+    }
+    // Como a chave do registro eh do tipo 'int', vamos considerar desde a
+    // posicao correspondente ah unidade (10^0) ateh a posicao correspondente ah
+    // unidade de bilhao (10^9)
+    int expoente;
+    for (expoente = 0; expoente <= 9; ++expoente) {
+        // Percorre o vetor inspecionando o digito correspondente ao expoente
+        // da vez
+        for (i = 0; i < n; ++i) {
+            int chave = vetor[i].chave;
+            // Descarta os digitos ah direita do expoente em questao
+            int e;
+            for (e = 0; e < expoente; ++e) {
+                chave /= 10;
+            }
+            int digito = chave % 10;
+            f_enqueue(filas[digito], &vetor[i]);
+        }
+        int j;
+        for (i = j = 0; i < NUM_SIMBOLOS; ++i) {
+            while (!f_underflow(filas[i])) {
+                Registro* r = f_dequeue(filas[i]);
+                vetor[j++] = *r;
+                free(r); // libera a memoria alocada pela operacao f_dequeue
+            }
+        }
+    }
+    for (i = 0; i < NUM_SIMBOLOS; ++i) {
+        f_destroy(filas[i]);
+    }
 }
