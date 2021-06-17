@@ -24,8 +24,8 @@ void algoritmo_ordenacao(Registro* v, size_t n) {
     // radixsort(v, n);
 
     // Algoritmos eficientes
-    mergesort(v, 0, n-1);
-    // quicksort(v, 0, n-1);
+    // mergesort(v, 0, n-1);
+    quicksort(v, 0, n-1);
 }
 
 int main(int argc, char* argv[]) {
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     srand(20210609);
     int i;
     for (i = 0; i < tamanho_vetor; ++i) {
-        vetor[i].chave = rand() % 9999 + 1; // faixa de 1 a 9999
+        vetor[i].chave = rand() % 99 + 1; // faixa de 1 a 9999
         vetor[i].valor = rand() % 26 + 'A'; // faixa de 'A' a 'Z'
     }
     puts("ANTES:");
