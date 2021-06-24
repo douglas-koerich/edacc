@@ -42,6 +42,10 @@ int main(void) {
     print(lst);
     putchar('\n');
 
+    ascending(lst);
+    print(lst);
+    putchar('\n');
+
     destroy(lst);
 
     return EXIT_SUCCESS;

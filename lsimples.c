@@ -239,3 +239,32 @@ bool compare(const Lista* lista_1, const Lista* lista_2) {
     // (se uma for mais longa que a outra entao sao diferentes)
     return noh1 == NULL && noh2 == NULL;
 }
+
+#define TROCA(r1, r2) (\
+    { \
+        Registro aux; \
+        memcpy(&aux, &(r1), sizeof(Registro)); \
+        memcpy(&(r1), &(r2), sizeof(Registro)); \
+        memcpy(&(r2), &aux, sizeof(Registro)); \
+    })
+
+void ascending(Lista* a_lista) {
+    if (underflow(a_lista)) {
+        return;
+    }
+    // Implementacao usando o algoritmo de bolha "inverso" (de "pedra")
+    int i;
+    for (i = 1; i < a_lista->contador; ++i) {
+        // Laco interno: comparacao entre nohs
+        Noh* noh = a_lista->cabeca;
+        while (noh->proximo != NULL) { // enquanto nao for o ultimo
+            if (noh->dado.chave > noh->proximo->dado.chave) { // compara
+                                                              // chave com o
+                                                              // a do proximo
+                TROCA(noh->dado, noh->proximo->dado);
+            }
+            noh = noh->proximo; // avanca para o proximo noh a fim de
+                                // compara-lo com o seguinte
+        }
+    }
+}

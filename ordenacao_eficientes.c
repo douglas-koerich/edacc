@@ -61,7 +61,7 @@ void quicksort(Registro* vetor, int inf, int sup) {
         if (esq <= dir) {
             // ... troca os elementos entre si
             TROCA(vetor[esq], vetor[dir]);
-            esq++, dir--;
+            ++esq, --dir;
         }
     }
     quicksort(vetor, inf, dir); // continua pelo segmento dos menores

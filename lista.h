@@ -40,4 +40,7 @@ bool search(const Lista*, int, Registro*);
 // Exercicio 2 da lista proposta
 bool compare(const Lista*, const Lista*);
 
+// Operacao-extra: classificacao da lista em ordem crescente do numero de chave
+void ascending(Lista*);
+
 #endif

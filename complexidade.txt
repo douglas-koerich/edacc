@@ -1,0 +1,90 @@
+void bubble(Registro* vetor, size_t n) {
+    int i;
+          (M)    (R)   (M+A)
+    for (i = 1; ----------------------------------------> 1
+                i <= n; --------------------------------> n+1
+                       ++i) { --------------------------> 2n
+        int j;
+            (M)  (A)    (R)   (M+A)
+        for (j = n-1; ----------------------------------> 2n
+                      j >= 0; --------------------------> (n+1)n = 2n² + n
+                              --j) { -------------------> 2n²
+                     (I)  (I) (R)    (I) (A) (I)     
+            if (vetor[j].chave < vetor[j-1].chave) { ---> 6n²
+                  (F)      (I)       (I+A)
+                TROCA(vetor[j], vetor[j-1]); -----------> 4n²
+            }
+        }
+    }
+}
+--------------------------------------------------------------
+                                         T(n) = 13n² + 5n + 2
+                                         Ordem: O(n²) (quadratica)
+
+void mergesort(Registro* vetor, int inf, int sup) {
+            (R)
+    if (inf >= sup) { ----------------------------------> 1
+          (M)
+        return; ----------------------------------------> 1 (soh terminal)
+    }
+            (M)    (A)    (A)
+    int meio = (inf + sup) / 2; ------------------------> 3
+    mergesort(vetor, inf, meio); -----------------------> T(n/2)
+                        (A)
+    mergesort(vetor, meio+1, sup); ---------------------> T(n/2) + 1
+                  (M)   (A)   (A)
+    size_t tamanho = sup - inf + 1; --------------------> 3
+                      (M)                       (A)
+    Registro* ordenado = malloc(sizeof(Registro) * tamanho); --> 2
+         (M)
+    int o = 0; -----------------------------------------> 1
+           (M)        (M)   (A)
+    int esq = inf, dir = meio+1; -----------------------> 3
+               (R)     (R)    (R)
+    while (esq <= meio && dir <= sup) { ----------------> 3n/2 + 1
+                 (I)    (I) (R)     (I)    (I)
+        if (vetor[esq].chave < vetor[dir].chave) { -----> 5n/2
+                 (I+M+A) (M)     (I+M+A)
+            ordenado[o++] = vetor[esq++]; --------------> 7n/2
+        } else {
+            ordenado[o++] = vetor[dir++];
+        }
+    }
+               (R)
+    while (esq <= meio) { ------------------------------> 3n/2 + 1
+             (I+M+A) (M)     (I+M+A)
+        ordenado[o++] = vetor[esq++]; ------------------> 7n/2
+    }
+    while (dir <= sup) {
+        ordenado[o++] = vetor[dir++];
+    }
+      (M)       (A)                     (A)
+    memcpy(vetor + inf, ordenado, tamanho*sizeof(Registro)); -> 3
+     (M)
+    free(ordenado); ------------------------------------> 1
+}
+------------------------------------------------------------------
+                               T(n) = 2T(n/2) + 25n/2 + 20, se n>1
+                                    = 2                   , se n=1
+
+T(n) = 2T(n/2) + 25n/2 + 20
+     = 2[2T(n/4) + 25n/4 + 20] + 25n/2 + 20 = 2.2T(n/4) + 2(25n/4 + 20) + 25n/2 + 20 = 4T(n/4) + 25n/2 + 2.20 + 25n/2 + 20 = 4T(n/4) + 2.25n/2 + 20(2 + 1)
+     = 2{2[2T(n/8) + 25n/8 + 20] + 25n/4 + 20} + 25n/2 + 20 = 8T(n/8) + 4.25n/8 + 4.20 + 2.25n/4 + 2.20 + 25n/2 + 20 = 8T(n/8) + 3.25n/2 + 20(4 + 2 + 1)
+     = ...
+     = (2^i)T(n/(2^i)) + i.25n/2 + 20(1 + 2 + 4 + ... + 2^(i-1))
+     = (2^i)T(n/(2^i)) + i.25n/2 + 20(1.(2^i - 1)/(2-1))
+
+T(n) = (2^i)T(n/(2^i)) + i.25n/2 + 20.(2^i - 1)
+
+Sendo a expressao acima generica, ela deve valer tambem para quando
+T(n/(2^i)) = T(1) no lado direito; entao, fazendo n/2^i = 1, tem-se que
+2^i = n, portanto i = lg(n) - logaritmo binario (na base 2).
+
+Substituindo 2^i por n e i por lg(n):
+
+T(n) = n.T(n/n) + lg(n).25n/2 + 20(n - 1)
+     = n.T(1) + lg(n).25n/2 + 20n - 20
+     = n.2 + lg(n).25n/2 + 20n - 20
+
+T(n) = (25/2)lg(n).n + 20n - 20
+Ordem: O(n.lg(n)) (n-logaritmica)
