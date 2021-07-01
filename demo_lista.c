@@ -31,9 +31,10 @@ int main(void) {
     printf("Digite uma chave de busca na lista: ");
     scanf("%d", &chave_usuario);
 
-    Registro aux;
-    if (search(lst, chave_usuario, &aux)) {
-        printf("O valor associado eh a letra %c\n", aux.valor);
+    Registro* reg = search(lst, chave_usuario);
+    if (reg != NULL) {
+        printf("O valor associado eh a letra %c\n", reg->valor);
+        Registro aux;
         extract(lst, &aux, VALOR, 0); // 0 = sem posicao ORDINAL
     } else {
         puts("Chave nao encontrada na lista");

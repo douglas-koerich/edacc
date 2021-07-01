@@ -211,17 +211,15 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
     --a_lista->contador;
 }
 
-bool search(const Lista* a_lista, int chave_x, Registro* p_reg) {
+Registro* search(const Lista* a_lista, int chave_x) {
     Noh* noh = a_lista->cabeca;
     while (noh != NULL) {
         if (noh->dado.chave == chave_x) {
-            *p_reg = noh->dado; // copia todo o registro para o endereco
-                                // (no ponteiro) passado pra funcao 
-            return true;
+            return &noh->dado;
         }
         noh = noh->proximo;
     }
-    return false; // chave_x nao foi encontrada
+    return NULL; // chave_x nao foi encontrada
 }
 
 bool compare(const Lista* lista_1, const Lista* lista_2) {

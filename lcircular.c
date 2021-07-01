@@ -206,18 +206,17 @@ void extract(Lista* a_lista, Registro* removido, Criterio forma,
     --a_lista->contador;
 }
 
-bool search(const Lista* a_lista, int chave_x, Registro* p_reg) {
+Registro* search(const Lista* a_lista, int chave_x) {
     if (underflow(a_lista)) {
-        return false;
+        return NULL;
     }
     Noh* noh = a_lista->cauda;
     do {
         noh = noh->proximo;
         if (noh->dado.chave == chave_x) {
-            *p_reg = noh->dado;
-            return true;
+            return &noh->dado;
         }
     } while (noh != a_lista->cauda);
 
-    return false;
+    return NULL;
 }

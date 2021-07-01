@@ -33,9 +33,8 @@ void insert(Lista*, const Registro*, Criterio, unsigned);
 // No caso de remocao por valor, a chave vai dentro do parametro Registro
 void extract(Lista*, Registro*, Criterio, unsigned);
 
-// Pesquisa por valor de chave (int) especifico, preenchendo o registro
-// se encontrado (indicado pelo retorno V/F)
-bool search(const Lista*, int, Registro*);
+// Pesquisa por valor de chave (int) especifico
+Registro* search(const Lista*, int);
 
 // Exercicio 2 da lista proposta
 bool compare(const Lista*, const Lista*);

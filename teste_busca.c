@@ -24,7 +24,6 @@ int algoritmo_busca(const Registro* v, size_t n, int x) {
     // return sequencial(v, n, x);
     // return binaria(v, 0, n-1, x);
     return interpolacao(v, 0, n-1, x);
-    // return espalhamento(v, n, x);
 }
 
 int main(int argc, char* argv[]) {
