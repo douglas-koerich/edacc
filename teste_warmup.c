@@ -5,70 +5,70 @@
 
 int main(void) {
     size_t tamanho;
-    printf("Qual a capacidade maxima do vetor a ser criado? ");
+    printf("Qual a capacidade maxima do conjunto a ser criado? ");
     scanf("%zu", &tamanho);
 
-    int* vetor = cria(tamanho); // recebe a referencia para o vetor recem-criado
+    lista* conjunto = cria(tamanho);
     int i, n;
     char opcao;
     for (i = 1; i <= tamanho/2; ++i) {
         printf("Digite um numero: ");
         scanf("%d", &n);
 
-        printf("Adiciona no (I)nicio ou no (F)im do vetor (I/F)? ");
+        printf("Adiciona no (I)nicio ou no (F)im do conjunto (I/F)? ");
         do {
             scanf(" %c", &opcao);
             opcao = toupper(opcao);
         } while (opcao != 'I' && opcao != 'F');
         if (opcao == 'I') {
-            insere(vetor, n, INICIO);
+            insere(conjunto, n, INICIO);
             puts("Valor adicionado no inicio!");
         } else {
-            insere(vetor, n, FIM);
-            puts("Valor adicionado no fim do vetor!");
+            insere(conjunto, n, FIM);
+            puts("Valor adicionado no fim do conjunto!");
         }
     }
-    puts("Conteudo do vetor:");
-    imprime(vetor);
+    puts("Conteudo do conjunto:");
+    imprime(conjunto);
     putchar('\n');
 
     // Confere que o numero de elementos armazenados eh o esperado
-    if (comprimento(vetor) == tamanho/2) {
-        puts("Comprimento do vetor cf. esperado!");
+    if (comprimento(conjunto) == tamanho/2) {
+        puts("Comprimento do conjunto cf. esperado!");
     } else {
-        puts("Vetor foi corrompido!");
+        puts("Conjunto foi corrompido!");
     }
 
-    // Confere que o vetor nao estah vazio
-    if (vazio(vetor) == false) {
-        puts("Vetor nao estah vazio cf. esperado!");
+    // Confere que o conjunto nao estah vazio
+    if (vazio(conjunto) == false) {
+        puts("Conjunto nao estah vazio cf. esperado!");
     } else {
-        puts("Algo deu errado, vetor vazio!");
+        puts("Algo deu errado, conjunto vazio!");
     }
 
     printf("Digite um numero para testar a busca: ");
     scanf("%d", &n);
-    i = busca(vetor, n);
+    i = busca(conjunto, n);
     if (i == -1) {
         puts("Numero nao foi encontrado!");
     } else {
-        printf("Valor encontrado no indice %d\n", i);
+        printf("Valor encontrado na posicao %d\n", i);
     }
 
-    printf("Deseja remover o valor do vetor (S/N)? ");
+    printf("Deseja remover o valor do conjunto (S/N)? ");
     do {
         scanf(" %c", &opcao);
         opcao = tolower(opcao);
     } while (opcao != 's' && opcao != 'n');
     if (opcao == 's') {
-        retira(vetor, VALOR, n);
+        retira(conjunto, VALOR, n);
     }
 
-    puts("Conteudo atualizado do vetor:");
-    imprime(vetor);
+    puts("Conteudo atualizado do conjunto:");
+    imprime(conjunto);
     putchar('\n');
 
-    destroi(vetor); // libera a memoria que esse vetor ocupou durante o programa
+    destroi(conjunto); // libera a memoria que esse conjunto ocupou durante o programa
 
     return EXIT_SUCCESS;
 }

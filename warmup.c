@@ -2,62 +2,71 @@
 #include <limits.h>
 #include "warmup.h"
 
-static size_t contador, tamanho;
+struct lista {
+    int* vetor;
+    size_t contador, tamanho;
+};
 
-int* cria(size_t maximo) {
+lista* cria(size_t maximo) {
     if (maximo == 0) {
         return NULL;
     }
-    contador = 0;
-    tamanho = maximo;
-    return malloc(sizeof(int) * tamanho);
+    lista* nova = malloc(sizeof(lista));
+    nova->contador = 0;
+    nova->tamanho = maximo;
+    nova->vetor = malloc(sizeof(int) * nova->tamanho);
+    return nova;
 }
 
-void destroi(int* vetor) {
-    if (vetor == NULL) {
+void destroi(lista* l) {
+    if (l == NULL) {
         return;
     }
-    free(vetor);
+    free(l->vetor);
+    free(l);
 }
 
-size_t comprimento(const int* vetor) {
-    if (vetor == NULL) {
+size_t comprimento(const lista* l) {
+    if (l == NULL) {
         return 0;
     }
-    return contador;
+    return l->contador;
 }
 
-bool vazio(const int* vetor) {
-    return contador == 0;
+bool vazio(const lista* l) {
+    return l->contador == 0;
 }
 
-void imprime(const int* vetor) {
+void imprime(const lista* l) {
     int i;
-    for (i = 0; i < contador; ++i) {
-        printf("%d ", vetor[i]);
+    for (i = 0; i < l->contador; ++i) {
+        printf("%d", l->vetor[i]);
+        if (i < l->contador - 1) {
+            printf(", ");
+        }
     }
 }
 
-int busca(const int* vetor, int valor) {
-    if (vetor == NULL) {
+int busca(const lista* l, int valor) {
+    if (l == NULL) {
         return -1;
     }
     int i;
-    for (i = 0; i < contador; ++i) {
-        if (vetor[i] == valor) {
+    for (i = 0; i < l->contador; ++i) {
+        if (l->vetor[i] == valor) {
             return i;
         }
     }
     return -1;
 }
 
-void insere(int* vetor, int valor, criterio opcao) {
-    if (vetor == NULL || contador == tamanho) {
+void insere(lista* l, int valor, criterio opcao) {
+    if (l == NULL || l->contador == l->tamanho) {
         return;
     }
     switch (opcao) {
         case FIM:
-            vetor[contador++] = valor;
+            l->vetor[l->contador++] = valor;
             break;
 
         case INICIO: {
@@ -65,52 +74,52 @@ void insere(int* vetor, int valor, criterio opcao) {
             // Desloca os elementos jah existentes uma posicao para
             // frente a fim de abrir o devido espaco para o novo elemento
             // na posicao inicial
-            for (i = contador-1; i >= 0; --i) {
-                vetor[i+1] = vetor[i];
+            for (i = l->contador-1; i >= 0; --i) {
+                l->vetor[i+1] = l->vetor[i];
             }
-            vetor[0] = valor;
-            ++contador;
+            l->vetor[0] = valor;
+            ++l->contador;
             break;
         }
         case EM_ORDEM: {
             int i;
             // Desloca todos os valores maiores uma posicao para frente
             // a fim de colocar o novo valor no indice correto
-            for (i = contador-1; i >= 0; --i) {
-                if (vetor[i] > valor) {
-                    vetor[i+1] = vetor[i];
+            for (i = l->contador-1; i >= 0; --i) {
+                if (l->vetor[i] > valor) {
+                    l->vetor[i+1] = l->vetor[i];
                 } else {
                     break;
                 }
             }
-            vetor[i+1] = valor;
-            ++contador;
+            l->vetor[i+1] = valor;
+            ++l->contador;
         }
         default:
             return;
     }
 }
 
-int retira(int* vetor, criterio opcao, int valor) {
+int retira(lista* l, criterio opcao, int valor) {
     // A funcao retorna INT_MIN (menor valor inteiro possivel) se
     // nao foi possivel remover (ou encontrar) o valor
-    if (vetor == NULL || contador == 0) {
+    if (l == NULL || l->contador == 0) {
         return INT_MIN;
     }
     int n;
     switch (opcao) {
         case FIM:
-            n = vetor[--contador];
+            n = l->vetor[--l->contador];
             break;
 
         case INICIO: {
-            n = vetor[0];
+            n = l->vetor[0];
             int i;
             // Desloca todos os elementos restantes uma posicao para tras
             // a fim de nao deixar a posicao inicial "vazia" (pois todo
-            // vetor eh considerado valido desde a sua posicao inicial)
-            for (i = 0, --contador; i < contador; ++i) {
-                vetor[i] = vetor[i+1];
+            // l eh considerado valido desde a sua posicao inicial)
+            for (i = 0, --l->contador; i < l->contador; ++i) {
+                l->vetor[i] = l->vetor[i+1];
             }
             break;
         }
@@ -118,14 +127,14 @@ int retira(int* vetor, criterio opcao, int valor) {
         case VALOR: {
             n = INT_MIN;
             int i;
-            for (i = 0; i < contador; ++i) {
-                if (vetor[i] == valor) {
+            for (i = 0; i < l->contador; ++i) {
+                if (l->vetor[i] == valor) {
                     n = valor;
                     break;
                 }
             }
-            for (--contador; i < contador; ++i) {
-                vetor[i] = vetor[i+1];
+            for (--l->contador; i < l->contador; ++i) {
+                l->vetor[i] = l->vetor[i+1];
             }
             break;
         }
