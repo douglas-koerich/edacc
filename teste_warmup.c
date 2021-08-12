@@ -15,7 +15,7 @@ int main(void) {
         printf("Digite um numero: ");
         scanf("%d", &n);
 
-        printf("Adiciona no (I)nicio ou no (F)im do vetor (I/F)?" );
+        printf("Adiciona no (I)nicio ou no (F)im do vetor (I/F)? ");
         do {
             scanf(" %c", &opcao);
             opcao = toupper(opcao);
@@ -30,6 +30,7 @@ int main(void) {
     }
     puts("Conteudo do vetor:");
     imprime(vetor);
+    putchar('\n');
 
     // Confere que o numero de elementos armazenados eh o esperado
     if (comprimento(vetor) == tamanho/2) {
@@ -65,6 +66,7 @@ int main(void) {
 
     puts("Conteudo atualizado do vetor:");
     imprime(vetor);
+    putchar('\n');
 
     destroi(vetor); // libera a memoria que esse vetor ocupou durante o programa
 
