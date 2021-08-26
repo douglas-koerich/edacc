@@ -30,7 +30,7 @@ void destroy(pilha* p) {
 }
 
 void push(pilha* p, int v) {
-    if (p == NULL) {
+    if (p == NULL || p->topo == p->tamanho - 1) {
         return;
     }
     p->vetor[++p->topo] = v; // incrementa 'topo' antes de armazenar novo valor
