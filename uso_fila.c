@@ -5,10 +5,9 @@
 
 int main(void) {
     const char NOME_ARQUIVO[] = "/tmp/fila.bin";
-    const size_t MAX_FILA = 100;
-    fila* f = create(MAX_FILA);
-
     char opcao;
+    fila* f = NULL;
+
     do {
         printf("(S)alvar ou (R)ecuperar a fila? ");
         scanf(" %c", &opcao);
@@ -16,6 +15,9 @@ int main(void) {
     } while (opcao != 'S' && opcao != 'R');
 
     if (opcao == 'S') {
+        const size_t MAX_FILA = 100;
+        f = create(MAX_FILA);
+
         puts("Digite uma sequencia de numeros, terminando com um numero negativo:");
         int numero;
         do {
@@ -30,7 +32,10 @@ int main(void) {
         putchar('\n');
         save(f, NOME_ARQUIVO);
     } else {
-        restore(f, NOME_ARQUIVO);
+        f = restore(NOME_ARQUIVO);
+        if (f == NULL) {
+            return EXIT_FAILURE;
+        }
         puts("Conteudo da fila:");
         print(f);
         putchar('\n');

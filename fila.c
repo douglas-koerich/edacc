@@ -13,9 +13,9 @@ struct fila {
 fila* create(size_t max) {
     fila* nova = malloc(sizeof(fila));
     nova->vetor = malloc((max+1) * sizeof(int)); // uma posicao extra porque
-    nova->tamanho = max+1;                       // deve-se ter sempre uma posicao
-                                                 // livre no vetor
-
+                                                 // deve-se ter sempre uma 
+                                                 // posicao livre no vetor
+    nova->tamanho = max;
     nova->fim = 0;
     nova->inicio = 0; // apesar de nao haver um elemento neste indice pra ser
                       // removido, essa igualdade com o indice 'fim' eh que vai
@@ -32,10 +32,14 @@ void destroy(fila* f) {
     free(f);
 }
 
+static bool overflow(const fila* f) { // teste de fila cheia
+    return (f == NULL) ||
+           (f->inicio == 0 && f->fim == f->tamanho) ||
+           (f->inicio > 0 && f->fim == f->inicio - 1);
+}
+
 void insert(fila* f, int v) {
-    if (f == NULL ||
-        (f->inicio == 0 && f->fim == f->tamanho) ||  // testes de fila cheia
-        (f->inicio > 0 && f->fim == f->inicio - 1)) {
+    if (overflow(f) == true) {
         return;
     }
     f->vetor[f->fim] = v;
@@ -67,7 +71,11 @@ int inspect(const fila* f) {
 }
 
 size_t size(const fila* f) {
-
+    int n = f->fim - f->inicio;
+    if (n < 0) { // 'fim' antes de 'inicio' no vetor?
+        n += f->tamanho + 1;
+    }
+    return n;
 }
 
 bool underflow(const fila* f) {
@@ -75,13 +83,64 @@ bool underflow(const fila* f) {
 }
 
 void print(const fila* f) {
-
+    if (f == NULL) {
+        return;
+    }
+    if (underflow(f)) {
+        puts("(VAZIA)");
+        return;
+    }
+    int i = f->inicio;
+    while (i != f->fim) {
+        printf("%d ", f->vetor[i]);
+        if (++i == f->tamanho) {
+            i = 0;
+        }
+    }
 }
 
 void save(const fila* f, const char* a) {
-
+    if (f == NULL || a == NULL) {
+        return;
+    }
+    FILE* s = fopen(a, "wb");
+    if (s == NULL) {
+        perror("Nao foi possivel criar o arquivo da fila");
+        return;
+    }
+    int i = f->inicio;
+    while (i != f->fim) {
+        fwrite(&f->vetor[i], sizeof(int), 1, s);
+        if (++i == f->tamanho) {
+            i = 0;
+        }
+    }
+    fclose(s);
 }
 
-void restore(fila* f, const char* a) {
+fila* restore(const char* a) {
+    if (a == NULL) {
+        return NULL;
+    }
+    FILE* s = fopen(a, "rb");
+    if (s == NULL) {
+        perror("Nao foi possivel abrir o arquivo da fila");
+        return NULL;
+    }
+    const int MAX_FILA = 1000;
+    fila* nova = create(MAX_FILA);
+    while (!feof(s)) {
+        int num;
+        if (fread(&num, sizeof(int), 1, s) < 1) {
+            if (ferror(s)) {
+                perror("Erro na leitura do arquivo");
+                return NULL;
+            }
+        } else {
+            insert(nova, num);
+        }
+    }
+    fclose(s);
 
+    return nova;
 }

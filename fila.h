@@ -20,6 +20,6 @@ bool underflow(const fila* f); // testa se a fila estah vazia
 void print(const fila* f); // imprime o conteudo da fila
 
 void save(const fila* f, const char* a); // para salvar a fila num arquivo a
-void restore(fila* f, const char* a); // para ler a fila de um arquivo a
+fila* restore(const char* a); // para criar nova fila a partir de um arquivo a
 
-#endif // PILHA_H
+#endif // FILA_H
