@@ -93,7 +93,7 @@ void print(const fila* f) {
     int i = f->inicio;
     while (i != f->fim) {
         printf("%d ", f->vetor[i]);
-        if (++i == f->tamanho) {
+        if (++i == f->tamanho + 1) {
             i = 0;
         }
     }
