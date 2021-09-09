@@ -71,6 +71,9 @@ int inspect(const fila* f) {
 }
 
 size_t size(const fila* f) {
+    if (f == NULL) {
+        return 0;
+    }
     int n = f->fim - f->inicio;
     if (n < 0) { // 'fim' antes de 'inicio' no vetor?
         n += f->tamanho + 1;
