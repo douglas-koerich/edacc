@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <limits.h>
 
 enum where {
     HEAD,  // operacao no inicio ("cabeca") da lista
@@ -21,7 +22,7 @@ void l_insert(list* l, int v, where w, unsigned n); // adicao de novo
                                                     // elemento na lista na
                                                     // posicao indicada (se
                                                     // for POSN, n >= 1)
-int l_extract(list* l, where s, unsigned n);    // remocao de um elemento da
+int l_extract(list* l, where w, unsigned n);    // remocao de um elemento da
                                                 // lista na posicao indicada
 
 bool l_search(const list* l, int v); // busca pelo valor na lista
