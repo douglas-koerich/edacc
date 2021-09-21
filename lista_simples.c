@@ -39,6 +39,14 @@ void l_insert(list* l, int v, where w, unsigned n) {
     if (l_underflow(l)) { // lista ainda vazia?
         w = HEAD; // novo noh serah ao mesmo tempo cabeca e cauda da lista
     }
+    if (w == POSN) {
+        // simplifica a opcao de local se 'n' indicar um dos extremos
+        if (n <= 1) {
+            w = HEAD;
+        } else if (n > l_size(l)) {
+            w = TAIL;
+        }
+    }
     switch (w) {
         case HEAD:
             p->link = l->cabeca;
@@ -61,7 +69,20 @@ void l_insert(list* l, int v, where w, unsigned n) {
             break;
         }
 
-        case POSN:
+        case POSN: { // insercao em posicao intermediaria da lista
+            /* OBS.: codigo parecido com a remocao do fim da lista (v. abaixo) */
+            node* q = l->cabeca;
+            node* a;
+            int i = 1; // numeracao dos nohs comeca em 1 nesta implementacao
+            while (i < n) {
+                a = q;  // lembra do noh que ficou para tras no percurso
+                q = q->link;
+                ++i;
+            }
+            p->link = q; // novo noh aponta para o antigo n-esimo noh
+            a->link = p; // o (n-1)-esimo noh (anterior) aponta para o novo
+            break;
+        }
 
         default:
             puts("Posicao invalida para insercao!");
@@ -74,10 +95,21 @@ int l_extract(list* l, where w, unsigned n) {
     if (l_underflow(l)) {
         return INT_MIN;
     }
-    node* p;
+    if (w == POSN) {
+        // simplifica a opcao de local se 'n' indicar um dos extremos
+        if (n <= 1) {
+            w = HEAD;
+        } else if (n == l_size(l)) {
+            w = TAIL;
+        } else if (n > l_size(l)) {
+            // nao remove se n for um numero maior que o tamanho da lista
+            puts("Posicao indicada maior que o comprimento da lista");
+            return INT_MIN;
+        }
+    }
+    node* p = l->cabeca;
     switch (w) {
         case HEAD:
-            p = l->cabeca;
             l->cabeca = p->link;
             if (p->link == NULL) { // removendo o ultimo noh?
                 l->cauda = NULL;
@@ -85,7 +117,6 @@ int l_extract(list* l, where w, unsigned n) {
             break;
 
         case TAIL: {
-            p = l->cabeca;
             node* a = NULL; // ao iniciar o percurso pelo inicio (cabeca) da
                             // lista, nao se tem um noh anterior a ele(a)
             while (p->link != NULL) { // enquanto nao chegar no ultimo
@@ -103,7 +134,17 @@ int l_extract(list* l, where w, unsigned n) {
             break;
         }
 
-        case POSN:
+        case POSN: {
+            node* a;
+            int i = 1;
+            while (i < n) {
+                a = p;
+                p = p->link;
+                ++i;
+            }
+            a->link = p->link;
+            break;
+        }
 
         default:
             puts("Posicao invalida para remocao!");

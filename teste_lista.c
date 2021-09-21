@@ -49,11 +49,21 @@ int main(void) {
         puts("Numero NAO foi encontrado!");
     }
 
+    puts("Inserindo um numero (10) como terceiro noh da lista");
+    l_insert(conjunto, 10, POSN, 3);
+    l_print(conjunto);
+    putchar('\n');
+
     puts("Removendo dos extremos do conjunto...");
     l_extract(conjunto, HEAD, 0);
     l_extract(conjunto, TAIL, 0);
 
     puts("Conteudo atualizado do conjunto:");
+    l_print(conjunto);
+    putchar('\n');
+
+    puts("Removendo o segundo noh da lista");
+    l_extract(conjunto, POSN, 2);
     l_print(conjunto);
     putchar('\n');
 
