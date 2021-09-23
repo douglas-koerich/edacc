@@ -31,4 +31,7 @@ bool l_underflow(const list* l); // testa se a lista estah vazia
 
 void l_print(const list* l); // imprime o conteudo (valores) da lista
 
+/* EXTRA: exercicio 2 da lista disponivel no AVA/Teams */
+bool l_equal(const list* l1, const list* l2);
+
 #endif // LISTA_H

@@ -193,3 +193,21 @@ void l_print(const list* l) {
     }
     printf("(CAUDA)");
 }
+
+bool l_equal(const list* l1, const list* l2) {
+    if (l1 == NULL || l2 == NULL) {
+        return false;
+    }
+    node* p1 = l1->cabeca;
+    node* p2 = l2->cabeca;
+
+    while (p1 != NULL && p2 != NULL) {
+        if (p1->dado != p2->dado) {
+            return false;
+        }
+        p1 = p1->proximo;
+        p2 = p2->proximo;
+    }
+    return p1 == p2; // retorna verdadeiro se ambos forem nulos (o laco
+                     // terminou de percorrer AMBAS as listas)
+}
