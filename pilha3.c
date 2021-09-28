@@ -2,15 +2,15 @@
 #include <stdio.h>
 #include <limits.h>
 #include "pilha.h"
-#include "deque.h"
+#include "lista.h"
 
 struct pilha {
-    deque* d;
+    list* l;
 };
 
 pilha* create(size_t max) {
     pilha* nova = malloc(sizeof(pilha));
-    nova->d = d_create(max);
+    nova->l = l_create();
     return nova;
 }
 
@@ -18,7 +18,7 @@ void destroy(pilha* p) {
     if (p == NULL) {
         return;
     }
-    d_destroy(p->d);
+    l_destroy(p->l);
     free(p);
 }
 
@@ -26,45 +26,45 @@ void push(pilha* p, int v) {
     if (p == NULL) {
         return;
     }
-    d_insert(p->d, v, FRONT);
+    l_insert(p->l, v, HEAD, 0);
 }
 
 int pop(pilha* p) {
-    if (d_underflow(p->d)) {
+    if (p == NULL || l_underflow(p->l)) {
         return INT_MIN;
     }
-    return d_extract(p->d, FRONT);
+    return l_extract(p->l, HEAD, 0);
 }
 
 int top(const pilha* p) {
-    if (d_underflow(p->d)) {
+    if (p == NULL) {
         return INT_MIN;
     }
-    return d_inspect(p->d, FRONT);
+    return l_head(p->l);
 }
 
 size_t size(const pilha* p) {
     if (p == NULL) {
         return 0;
     }
-    return d_size(p->d);
+    return l_size(p->l);
 }
 
 bool underflow(const pilha* p) {
     if (p == NULL) {
         return true;
     }
-    return d_underflow(p->d);
+    return l_underflow(p->l);
 }
 
 void print(const pilha* p) {
     if (p == NULL) {
         return;
     }
-    if (d_underflow(p->d)) {
+    if (l_underflow(p->l)) {
         puts("(VAZIA)");
         return;
     }
     printf("(TOPO) ");
-    d_print(p->d);
+    l_print(p->l);
 }

@@ -211,3 +211,25 @@ bool l_equal(const list* l1, const list* l2) {
     return p1 == p2; // retorna verdadeiro se ambos forem nulos (o laco
                      // terminou de percorrer AMBAS as listas)
 }
+
+int l_head(const list* l) {
+    if (l_underflow(l)) {
+        return INT_MIN;
+    }
+    return (l->cabeca)->dado;
+}
+
+size_t l_occurrences(const list* l, int v) {
+    if (l == NULL) {
+        return 0;
+    }
+    size_t contador = 0;
+    node* p = l->cabeca;
+    while (p != NULL) {
+        if (p->dado == v) {
+            ++contador;
+        }
+        p = p->proximo;
+    }
+    return contador;
+}

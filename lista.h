@@ -34,4 +34,11 @@ void l_print(const list* l); // imprime o conteudo (valores) da lista
 /* EXTRA: exercicio 2 da lista disponivel no AVA/Teams */
 bool l_equal(const list* l1, const list* l2);
 
+/* EXTRA 2: operacao do TAD lista que permite o seu uso para inspecao
+   (consulta) por pilha e fila */
+int l_head(const list* l);
+
+/* EXTRA 3: exercicio 9.2 do livro do Pereira (v. ref. bibliografica) */
+size_t l_occurrences(const list* l, int v);
+
 #endif // LISTA_H

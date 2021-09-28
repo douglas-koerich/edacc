@@ -45,6 +45,7 @@ int main(void) {
     scanf("%d", &n);
     if (l_search(conjunto, n)) {
         puts("Numero foi encontrado!");
+        printf("Numero de ocorrencias: %zu\n", l_occurrences(conjunto, n));
     } else {
         puts("Numero NAO foi encontrado!");
     }
