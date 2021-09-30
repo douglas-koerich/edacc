@@ -12,7 +12,7 @@ void minmax(const int* lista, size_t tamanho, int* menor, int* maior);
 int main(void) {
     srand((unsigned) time(NULL));
 
-    const size_t TAMANHO = 20;
+    const size_t TAMANHO = 6;
     int vetor[TAMANHO], i;
 
     for (i = 0; i < TAMANHO; ++i) {
@@ -48,14 +48,51 @@ void minmax(const int* lista, size_t tamanho, int* menor, int* maior) {
 }
 */
 
-// Versao recursiva
+/* Versao recursiva #1 (linear)
 void minmax(const int* lista, size_t tamanho, int* menor, int* maior) {
-    // (...)
-    minmax(/*...*/, menor, maior);
-    if (lista[0] < *menor) {
-        *menor = lista[0];
+    if (tamanho == 1) {
+        *menor = *maior = lista[0];
+        return; // aqui nao ha uma chamada para outra 'minmax()'
+    } else {
+        minmax(&lista[1], tamanho - 1, menor, maior); // chama o algoritmo
+                                                      // RECURSIVAMENTE para
+                                                      // examinar o restante
+
+        // Ao voltar da chamada recursiva, pode-se comparar lista[0] com o que /// essa chamada descobriu como menor e maior valores 
+        if (lista[0] < *menor) {
+            *menor = lista[0];
+        }
+        if (lista[0] > *maior) {
+            *maior = lista[0];
+        }
     }
-    if (lista[0] > *maior) {
-        *maior = lista[0];
+}
+*/
+
+// Versao recursiva #2 (multipla)
+void minmax_(const int* lista, int inicio, int fim, int* menor, int* maior) {
+    // Condicao terminal (base de recursao)
+    if (fim < inicio) {
+        return;
     }
+    // Fase ativa (passo de recursao)
+    int meio = (inicio + fim) / 2; // indice do meio do segmento
+                                   // entre inicio e fim
+    minmax_(lista, inicio, meio - 1, menor, maior);
+    minmax_(lista, meio+1, fim, menor, maior);
+
+    // Ao voltar das chamadas recursivas, pode-se comparar lista[meio] com o
+    // que essas chamadas descobriram como menor e maior valores 
+    if (lista[meio] < *menor) {
+        *menor = lista[meio];
+    }
+    if (lista[meio] > *maior) {
+        *maior = lista[meio];
+    }
+}
+
+void minmax(const int* lista, size_t tamanho, int* menor, int* maior) {
+    *menor = INT_MAX, *maior = INT_MIN; // para estabelecer uma
+                                        // referencia inicial
+    minmax_(lista, 0, tamanho - 1, menor, maior);
 }
