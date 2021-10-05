@@ -68,6 +68,8 @@ int main(void) {
     l_print(conjunto);
     putchar('\n');
 
+    printf("Soma dos elementos remanescentes da lista: %d\n", l_sum(conjunto));
+
     l_destroy(conjunto);
 
     return EXIT_SUCCESS;

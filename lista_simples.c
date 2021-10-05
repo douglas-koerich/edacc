@@ -246,3 +246,28 @@ size_t l_occurrences(const list* l, int v) {
     }
     return contador;
 }
+
+int l_sum_r(const node* n) {
+    if (n == NULL) { // Condicao terminal: noh inexistente
+        return 0;
+    } else {
+        return n->dado + l_sum_r(n->link);
+    }
+}
+
+int l_sum(const list* l) {
+    if (l == NULL) {
+        return 0;
+    }
+    /*
+    // Versao iterativa
+    int total = 0;
+    node* p = l->cabeca;
+    while (p != NULL) {
+        total += p->dado;
+        p = p->link;
+    }
+    return total;
+    */
+   l_sum_r(l->cabeca);
+}

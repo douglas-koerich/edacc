@@ -41,4 +41,7 @@ int l_head(const list* l);
 /* EXTRA 3: exercicio 9.2 do livro do Pereira (v. ref. bibliografica) */
 size_t l_occurrences(const list* l, int v);
 
+/* EXTRA 4: soma dos valores armazenados na lista */
+int l_sum(const list* l);
+
 #endif // LISTA_H
