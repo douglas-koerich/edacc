@@ -6,8 +6,8 @@
 void bolha(int*, size_t);
 void selecao(int*, size_t);
 void insercao(int*, size_t);
+void shell(int*, size_t);
 
-/*
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         puts("Numero insuficiente de parametros");
@@ -23,29 +23,29 @@ int main(int argc, char* argv[]) {
     // puts(">>> ANTES DA ORDENACAO:");
     for (i = 0; i < num_elementos; ++i) {
         vetor[i] = rand() % 100 + 1;
-        // printf("%d ", vetor[i]);
+        //printf("%d ", vetor[i]);
     }
-    // putchar('\n');
+    //putchar('\n');
 
     // puts(">>> DURANTE A ORDENACAO:");
     clock_t t1 = clock();
-    ordena(vetor, num_elementos);
+    shell(vetor, num_elementos);
     clock_t t2 = clock();
     clock_t delta_t = t2 - t1;
     printf("%ld\n", delta_t);
 
     // puts("<<< DEPOIS DA ORDENACAO:");
     for (i = 0; i < num_elementos; ++i) {
-        // printf("%d ", vetor[i]);
+        //printf("%d ", vetor[i]);
     }
-    // putchar('\n');
+    //putchar('\n');
 
     free(vetor);
 
     return EXIT_SUCCESS;
 }
-*/
 
+/*
 int main(void) {
     FILE* arquivo = fopen("medicao.csv", "wt");
     if (arquivo == NULL) {
@@ -90,3 +90,4 @@ int main(void) {
 
     return EXIT_SUCCESS;
 }
+*/
