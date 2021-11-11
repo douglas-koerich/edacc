@@ -7,6 +7,9 @@ void bolha(int*, size_t);
 void selecao(int*, size_t);
 void insercao(int*, size_t);
 void shell(int*, size_t);
+void radix(int*, size_t);
+
+void merge(int*, int, int);
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -20,25 +23,25 @@ int main(int argc, char* argv[]) {
 
     srand(20211028);
     int i;
-    // puts(">>> ANTES DA ORDENACAO:");
+    puts(">>> ANTES DA ORDENACAO:");
     for (i = 0; i < num_elementos; ++i) {
-        vetor[i] = rand() % 100 + 1;
-        //printf("%d ", vetor[i]);
+        vetor[i] = rand() % 1000 + 1;
+        printf("%d ", vetor[i]);
     }
-    //putchar('\n');
+    putchar('\n');
 
-    // puts(">>> DURANTE A ORDENACAO:");
+    puts(">>> DURANTE A ORDENACAO:");
     clock_t t1 = clock();
-    shell(vetor, num_elementos);
+    merge(vetor, 0, num_elementos-1);
     clock_t t2 = clock();
     clock_t delta_t = t2 - t1;
-    printf("%ld\n", delta_t);
+    // printf("%ld\n", delta_t);
 
-    // puts("<<< DEPOIS DA ORDENACAO:");
+    puts("<<< DEPOIS DA ORDENACAO:");
     for (i = 0; i < num_elementos; ++i) {
-        //printf("%d ", vetor[i]);
+        printf("%d ", vetor[i]);
     }
-    //putchar('\n');
+    putchar('\n');
 
     free(vetor);
 
