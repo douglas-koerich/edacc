@@ -233,3 +233,28 @@ size_t l_occurrences(const list* l, int v) {
     }
     return contador;
 }
+
+/* Implementacao dos exercicios 1 e 2 da lista #5 (algoritmos de ordenacao)
+   sobre uma lista usando a ordenacao por bolha */
+
+void l_ascending_sort(list* l) {
+    int i;
+    bool trocou = true;
+    for (i = 1; i < l->tamanho && trocou == true; ++i) {
+        trocou = false; // comeca nova varredura "zerando" a sinalizacao
+        node* j;
+        for (j = l->cauda; j->anterior != NULL; j = j->anterior) {
+            if (j->dado < j->anterior->dado) {
+                int x = j->dado;
+                j->dado = j->anterior->dado;
+                j->anterior->dado = x;
+                trocou = true;
+            }
+        }
+        /* EXTRA: exibicao da ordenacao parcial da lista
+           ao fim de cada varredura no algoritmo "bolha" */
+        printf("%da. varredura: ", i);
+        l_print(l);
+        putchar('\n');
+    }
+}

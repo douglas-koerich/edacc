@@ -44,4 +44,7 @@ size_t l_occurrences(const list* l, int v);
 /* EXTRA 4: soma dos valores armazenados na lista */
 int l_sum(const list* l);
 
+/* EXTRA 5: exercicio 1 da lista 5 (algoritmos de ordenacao) */
+void l_ascending_sort(list* l);
+
 #endif // LISTA_H
