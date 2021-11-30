@@ -1,6 +1,7 @@
 #ifndef HASH_H
 #define HASH_H
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include "item.h"
 
@@ -11,7 +12,7 @@ hash* create(size_t tamanho);
 void destroy(hash* tabela);
 item* search(const hash* tabela, int chave);
 void insert(hash* tabela, const item* registro);
-void extract(hash* tabela, item* registro, int chave);
+bool extract(hash* tabela, item* registro, int chave);
 
 void print(const hash* tabela);
 
